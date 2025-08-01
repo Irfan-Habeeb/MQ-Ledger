@@ -1,7 +1,14 @@
 import jsPDF from 'jspdf'
-import 'jspdf-autotable'
+import autoTable from 'jspdf-autotable'
 import { AccountingEntry } from '@/types'
 import { formatCurrency, formatCurrencyForDisplay } from './utils'
+
+// Extend jsPDF with autoTable method
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF
+  }
+}
 
 interface PDFExportOptions {
   entries: AccountingEntry[]
@@ -71,7 +78,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
     
     const tableHeaders = ['Date', 'Description', 'Type', 'Category', 'Amount']
     
-    doc.autoTable({
+    autoTable(doc, {
       head: [tableHeaders],
       body: tableData,
       startY: 130,
