@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,7 +13,10 @@ import { formatCurrency, formatCurrencyForDisplay, getLast12Months, calculatePer
 import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
-import { DollarSign, CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target } from 'lucide-react'
+import { CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target, Filter, Download } from 'lucide-react'
+import { Pagination } from '@/components/ui/pagination'
+import { FilterDialog, FilterOptions } from '@/components/ui/filter-dialog'
+import { exportToPDF } from '@/lib/pdf-export'
 
 export function Dashboard() {
   const [entries, setEntries] = useState<AccountingEntry[]>([])
@@ -39,16 +42,30 @@ export function Dashboard() {
   // Chart visibility states
   const [visibleTrendDatasets, setVisibleTrendDatasets] = useState<('income' | 'expenses' | 'balance')[]>(['income', 'expenses', 'balance'])
   const [categoryView, setCategoryView] = useState<'Income' | 'Expense' | 'All'>('Expense')
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+  
+  // Filter state
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false)
+  const [activeFilters, setActiveFilters] = useState<FilterOptions>({
+    dateRange: 'all',
+    type: 'All',
+    category: ''
+  })
 
-  // Summary calculations
-  const totals = calculatePeriodTotals(entries)
+  // Summary calculations - memoized for performance
+  const totals = useMemo(() => calculatePeriodTotals(entries), [entries])
   const currentMonth = new Date().getMonth()
   const currentYear = new Date().getFullYear()
-  const currentMonthEntries = entries.filter(entry => {
-    const entryDate = new Date(entry.date)
-    return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear
-  })
-  const currentMonthTotals = calculatePeriodTotals(currentMonthEntries)
+  const currentMonthEntries = useMemo(() => 
+    entries.filter(entry => {
+      const entryDate = new Date(entry.date)
+      return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear
+    }), [entries, currentMonth, currentYear]
+  )
+  const currentMonthTotals = useMemo(() => calculatePeriodTotals(currentMonthEntries), [currentMonthEntries])
 
   useEffect(() => {
     checkUser()
@@ -64,7 +81,7 @@ export function Dashboard() {
     if (entries.length > 0) {
       calculateChartData()
     }
-  }, [entries, categoryView])
+  }, [entries, categoryView, calculateChartData])
 
   const checkUser = async () => {
     try {
@@ -108,6 +125,7 @@ export function Dashboard() {
 
       if (error) throw error
       setEntries((data as unknown as AccountingEntry[]) || [])
+      setCurrentPage(1) // Reset to first page when loading new data
     } catch (error) {
       console.error('Error loading entries:', error)
     } finally {
@@ -241,6 +259,79 @@ export function Dashboard() {
       console.error('Error deleting entry:', error)
       alert('Error deleting entry')
     }
+  }
+
+  // Calculate pagination for filtered entries
+  const totalPages = useMemo(() => Math.ceil(filteredEntries.length / itemsPerPage), [filteredEntries.length, itemsPerPage])
+  const startIndex = useMemo(() => (currentPage - 1) * itemsPerPage, [currentPage, itemsPerPage])
+  const endIndex = useMemo(() => startIndex + itemsPerPage, [startIndex, itemsPerPage])
+  const currentEntries = useMemo(() => filteredEntries.slice(startIndex, endIndex), [filteredEntries, startIndex, endIndex])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    // Scroll to top of table
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Filter and export functions
+  const handleApplyFilters = (filters: FilterOptions) => {
+    setActiveFilters(filters)
+    setCurrentPage(1) // Reset to first page when filtering
+  }
+
+  const handleExportPDF = (filters: FilterOptions) => {
+    const filteredEntries = getFilteredEntries(entries, filters)
+    const filteredTotals = calculatePeriodTotals(filteredEntries)
+    
+    exportToPDF({
+      entries: filteredEntries,
+      filters,
+      totals: filteredTotals
+    })
+  }
+
+  // Get unique categories for filter dropdown
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set(entries.map(entry => entry.category))
+    return Array.from(uniqueCategories).sort()
+  }, [entries])
+
+  // Filter entries based on active filters
+  const filteredEntries = useMemo(() => {
+    return getFilteredEntries(entries, activeFilters)
+  }, [entries, activeFilters])
+
+  // Calculate pagination for filtered entries
+  const totalPages = useMemo(() => Math.ceil(filteredEntries.length / itemsPerPage), [filteredEntries.length, itemsPerPage])
+  const startIndex = useMemo(() => (currentPage - 1) * itemsPerPage, [currentPage, itemsPerPage])
+  const endIndex = useMemo(() => startIndex + itemsPerPage, [startIndex, itemsPerPage])
+  const currentEntries = useMemo(() => filteredEntries.slice(startIndex, endIndex), [filteredEntries, startIndex, endIndex])
+
+  // Helper function to filter entries
+  const getFilteredEntries = (entries: AccountingEntry[], filters: FilterOptions): AccountingEntry[] => {
+    return entries.filter(entry => {
+      // Date range filter
+      if (filters.dateRange !== 'all') {
+        const entryDate = new Date(entry.date)
+        const startDate = filters.startDate ? new Date(filters.startDate) : null
+        const endDate = filters.endDate ? new Date(filters.endDate) : null
+        
+        if (startDate && entryDate < startDate) return false
+        if (endDate && entryDate > endDate) return false
+      }
+      
+      // Type filter
+      if (filters.type && filters.type !== 'All' && entry.type !== filters.type) {
+        return false
+      }
+      
+      // Category filter
+      if (filters.category && entry.category !== filters.category) {
+        return false
+      }
+      
+      return true
+    })
   }
 
   const toggleTrendDataset = (dataset: 'income' | 'expenses' | 'balance') => {
@@ -603,14 +694,39 @@ export function Dashboard() {
         {/* Entries Table */}
         <Card className="bg-white shadow-lg border-gray-200">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <div className="p-2 bg-gray-100 rounded-lg mr-3">
-                <BarChart3 className="h-5 w-5 text-gray-600" />
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="p-2 bg-gray-100 rounded-lg mr-3">
+                  <BarChart3 className="h-5 w-5 text-gray-600" />
+                </div>
+                Recent Entries
               </div>
-              Recent Entries
+              <div className="flex items-center space-x-3">
+                <div className="text-sm text-gray-500 font-medium">
+                  {filteredEntries.length} of {entries.length} entries
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsFilterDialogOpen(true)}
+                  className="flex items-center space-x-2"
+                >
+                  <Filter className="h-4 w-4" />
+                  <span>Filter</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleExportPDF(activeFilters)}
+                  className="flex items-center space-x-2 text-green-600 hover:text-green-700"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Export</span>
+                </Button>
+              </div>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -624,7 +740,7 @@ export function Dashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {entries.slice(0, 10).map((entry) => (
+                  {currentEntries.map((entry) => (
                     <tr key={entry.id} className="hover:bg-gray-50 transition-colors duration-200">
                       <td className="py-4 px-6 text-gray-700 font-medium">{new Date(entry.date).toLocaleDateString()}</td>
                       <td className="py-4 px-6 text-gray-900 font-medium max-w-xs truncate" title={entry.description}>
@@ -660,9 +776,28 @@ export function Dashboard() {
                 </tbody>
               </table>
             </div>
+            
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              totalItems={entries.length}
+              itemsPerPage={itemsPerPage}
+            />
           </CardContent>
         </Card>
       </div>
+
+      {/* Filter Dialog */}
+      <FilterDialog
+        isOpen={isFilterDialogOpen}
+        onClose={() => setIsFilterDialogOpen(false)}
+        onApply={handleApplyFilters}
+        onExport={handleExportPDF}
+        currentFilters={activeFilters}
+        categories={categories}
+      />
     </div>
   )
 }

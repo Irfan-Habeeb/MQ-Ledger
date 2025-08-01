@@ -58,6 +58,13 @@ export const getCurrentUser = async (): Promise<User | null> => {
     if (error) throw error
     
     if (user) {
+      // Check if user is authorized
+      if (!isUserAuthorized(user.email!)) {
+        // Sign out unauthorized user
+        await supabaseClient.auth.signOut()
+        throw new Error('UNAUTHORIZED_USER')
+      }
+      
       return {
         id: user.id,
         email: user.email!,
@@ -77,6 +84,14 @@ export const onAuthStateChange = (callback: (user: User | null) => void) => {
   const supabaseClient = getSupabaseClient()
   return supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session?.user) {
+      // Check if user is authorized
+      if (!isUserAuthorized(session.user.email!)) {
+        // Sign out unauthorized user
+        await supabaseClient.auth.signOut()
+        callback(null)
+        return
+      }
+      
       const user: User = {
         id: session.user.id,
         email: session.user.email!,
