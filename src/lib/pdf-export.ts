@@ -72,19 +72,19 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   // Clean professional header
   const headerY = 30
   
-  // Logo with correct colors
+  // Logo with correct colors and proper spacing
   doc.setFontSize(28)
   doc.setTextColor(52, 78, 128) // #344e80
   doc.text('MENTORS', margin, headerY)
   doc.setTextColor(67, 162, 76) // #43a24c
-  doc.text('CUE', margin + 70, headerY)
+  doc.text('CUE', margin + 65, headerY) // Reduced spacing to match character spacing
   
   // Subtitle
   doc.setFontSize(16)
   doc.setTextColor(75, 85, 99) // Gray-600
   doc.text('Financial Records', margin, headerY + 12)
   
-  // Report details on the right
+  // Report details on the right with closer spacing
   const currentDate = new Date().toLocaleDateString('en-IN', { 
     day: '2-digit', 
     month: 'short', 
@@ -93,11 +93,11 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   
   doc.setFontSize(10)
   doc.setTextColor(107, 114, 128) // Gray-500
-  doc.text(`Generated: ${currentDate}`, pageWidth - margin, headerY - 5, { align: 'right' })
+  doc.text(`Generated: ${currentDate}`, pageWidth - margin, headerY - 2, { align: 'right' })
   
-  // Filter information
+  // Filter information with closer spacing
   const filterText = getFilterDescription(filters)
-  doc.text(`Period: ${filterText}`, pageWidth - margin, headerY + 5, { align: 'right' })
+  doc.text(`Period: ${filterText}`, pageWidth - margin, headerY + 8, { align: 'right' })
   
   // Summary section with clean design
   const summaryY = headerY + 35
@@ -105,8 +105,8 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   const cardHeight = 20
   const cardSpacing = 5
   
-  // Income summary
-  doc.setFillColor(34, 197, 94) // Green
+  // Income summary - Dark green
+  doc.setFillColor(21, 128, 61) // Dark green
   doc.rect(margin, summaryY, cardWidth, cardHeight, 'F')
   doc.setFontSize(10)
   doc.setTextColor(255, 255, 255)
@@ -115,8 +115,8 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setFont('helvetica', 'bold')
   doc.text(formatCurrencyForDisplay(totals.income), margin + 5, summaryY + 15)
   
-  // Expense summary
-  doc.setFillColor(239, 68, 68) // Red
+  // Expense summary - Dark red
+  doc.setFillColor(185, 28, 28) // Dark red
   doc.rect(margin + cardWidth + cardSpacing, summaryY, cardWidth, cardHeight, 'F')
   doc.setFontSize(10)
   doc.setTextColor(255, 255, 255)
@@ -125,8 +125,9 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setFont('helvetica', 'bold')
   doc.text(formatCurrencyForDisplay(totals.expense), margin + cardWidth + cardSpacing + 5, summaryY + 15)
   
-  // Balance summary
-  doc.setFillColor(59, 130, 246) // Blue
+  // Balance summary - Dynamic color based on value
+  const balanceColor = totals.balance >= 0 ? [21, 128, 61] : [185, 28, 28] // Dark green if positive, dark red if negative
+  doc.setFillColor(balanceColor[0], balanceColor[1], balanceColor[2])
   doc.rect(margin + (cardWidth + cardSpacing) * 2, summaryY, cardWidth, cardHeight, 'F')
   doc.setFontSize(10)
   doc.setTextColor(255, 255, 255)
@@ -195,17 +196,15 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         fillColor: [249, 250, 251]
       },
       pageBreak: 'auto',
-              didDrawPage: function() {
-          // Footer on every page
+                      didDrawPage: function() {
+          // Footer on every page - only page numbers
           const pageNumber = doc.getCurrentPageInfo().pageNumber
           const totalPages = doc.getNumberOfPages()
-        
-        doc.setFontSize(8)
-        doc.setTextColor(156, 163, 175)
-        doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth / 2, pageHeight - 15, { align: 'center' })
-        doc.text(`MENTORS CUE Financial Records`, pageWidth / 2, pageHeight - 10, { align: 'center' })
-        doc.text(`Generated on ${currentDate}`, pageWidth / 2, pageHeight - 5, { align: 'center' })
-      }
+          
+          doc.setFontSize(8)
+          doc.setTextColor(156, 163, 175)
+          doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' })
+        }
     })
   } else {
     // No entries message
