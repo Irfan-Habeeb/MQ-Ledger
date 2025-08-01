@@ -16,8 +16,7 @@ export const getSupabaseClient = () => {
   return supabase
 }
 
-// For backward compatibility
-export const supabase = getSupabaseClient()
+
 
 export type Database = {
   public: {
