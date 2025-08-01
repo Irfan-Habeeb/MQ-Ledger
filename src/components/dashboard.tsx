@@ -344,8 +344,30 @@ export function Dashboard() {
 
   const getCategoryOptions = (type: 'Income' | 'Expense') => {
     const categories = {
-      Income: ['Salary', 'Freelance', 'Investment', 'Business', 'Other'],
-      Expense: ['Food', 'Transport', 'Entertainment', 'Shopping', 'Bills', 'Healthcare', 'Education', 'Other']
+      Income: [
+        'Tuition Fees',
+        'Online Course Sales',
+        'Coaching Sessions',
+        'Mentorship Programs',
+        'Workshop Fees',
+        'Study Material Sales',
+        'Consultation Fees',
+        'Corporate Training',
+        'Exam Preparation',
+        'Other Income'
+      ],
+      Expense: [
+        'Teacher Salaries',
+        'Platform Subscriptions',
+        'Marketing & Ads',
+        'Study Materials',
+        'Office Rent',
+        'Internet & Tech',
+        'Travel & Transport',
+        'Utilities & Bills',
+        'Professional Development',
+        'Other Expenses'
+      ]
     }
     return categories[type]
   }
