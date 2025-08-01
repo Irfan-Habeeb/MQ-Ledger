@@ -279,12 +279,13 @@ export function Dashboard() {
         .select()
 
       if (error) {
-        console.error('Supabase error details:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        })
+              console.error('Supabase error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+        fullError: error
+      })
         throw error
       }
 
@@ -384,6 +385,10 @@ export function Dashboard() {
   const getCategoryOptions = (type: 'Income' | 'Expense') => {
     const categories = {
       Income: [
+        'Salary',
+        'Freelance',
+        'Investment',
+        'Business',
         'Tuition Fees',
         'Online Course Sales',
         'Coaching Sessions',
@@ -396,6 +401,13 @@ export function Dashboard() {
         'Other Income'
       ],
       Expense: [
+        'Food',
+        'Transport',
+        'Entertainment',
+        'Shopping',
+        'Bills',
+        'Healthcare',
+        'Education',
         'Teacher Salaries',
         'Platform Subscriptions',
         'Marketing & Ads',
