@@ -30,7 +30,7 @@ declare module 'jspdf' {
           halign?: string
         }
       }
-      didDrawPage?: (data: any) => void
+      didDrawPage?: (data: { pageNumber: number }) => void
       margin?: {
         top?: number
         right?: number
@@ -197,10 +197,10 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         fillColor: [249, 250, 251]
       },
       pageBreak: 'auto',
-      didDrawPage: function(data) {
-        // Footer on every page
-        const pageNumber = doc.getCurrentPageInfo().pageNumber
-        const totalPages = doc.getNumberOfPages()
+              didDrawPage: function() {
+          // Footer on every page
+          const pageNumber = doc.getCurrentPageInfo().pageNumber
+          const totalPages = doc.getNumberOfPages()
         
         doc.setFontSize(8)
         doc.setTextColor(156, 163, 175)
