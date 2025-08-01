@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,6 +14,7 @@ import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
 import { DollarSign, CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target } from 'lucide-react'
+import { Pagination } from '@/components/ui/pagination'
 
 export function Dashboard() {
   const [entries, setEntries] = useState<AccountingEntry[]>([])
@@ -39,16 +40,22 @@ export function Dashboard() {
   // Chart visibility states
   const [visibleTrendDatasets, setVisibleTrendDatasets] = useState<('income' | 'expenses' | 'balance')[]>(['income', 'expenses', 'balance'])
   const [categoryView, setCategoryView] = useState<'Income' | 'Expense' | 'All'>('Expense')
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
-  // Summary calculations
-  const totals = calculatePeriodTotals(entries)
+  // Summary calculations - memoized for performance
+  const totals = useMemo(() => calculatePeriodTotals(entries), [entries])
   const currentMonth = new Date().getMonth()
   const currentYear = new Date().getFullYear()
-  const currentMonthEntries = entries.filter(entry => {
-    const entryDate = new Date(entry.date)
-    return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear
-  })
-  const currentMonthTotals = calculatePeriodTotals(currentMonthEntries)
+  const currentMonthEntries = useMemo(() => 
+    entries.filter(entry => {
+      const entryDate = new Date(entry.date)
+      return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear
+    }), [entries, currentMonth, currentYear]
+  )
+  const currentMonthTotals = useMemo(() => calculatePeriodTotals(currentMonthEntries), [currentMonthEntries])
 
   useEffect(() => {
     checkUser()
@@ -108,6 +115,7 @@ export function Dashboard() {
 
       if (error) throw error
       setEntries((data as unknown as AccountingEntry[]) || [])
+      setCurrentPage(1) // Reset to first page when loading new data
     } catch (error) {
       console.error('Error loading entries:', error)
     } finally {
@@ -241,6 +249,18 @@ export function Dashboard() {
       console.error('Error deleting entry:', error)
       alert('Error deleting entry')
     }
+  }
+
+  // Calculate pagination - memoized for performance
+  const totalPages = useMemo(() => Math.ceil(entries.length / itemsPerPage), [entries.length, itemsPerPage])
+  const startIndex = useMemo(() => (currentPage - 1) * itemsPerPage, [currentPage, itemsPerPage])
+  const endIndex = useMemo(() => startIndex + itemsPerPage, [startIndex, itemsPerPage])
+  const currentEntries = useMemo(() => entries.slice(startIndex, endIndex), [entries, startIndex, endIndex])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    // Scroll to top of table
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const toggleTrendDataset = (dataset: 'income' | 'expenses' | 'balance') => {
@@ -603,14 +623,19 @@ export function Dashboard() {
         {/* Entries Table */}
         <Card className="bg-white shadow-lg border-gray-200">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <div className="p-2 bg-gray-100 rounded-lg mr-3">
-                <BarChart3 className="h-5 w-5 text-gray-600" />
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="p-2 bg-gray-100 rounded-lg mr-3">
+                  <BarChart3 className="h-5 w-5 text-gray-600" />
+                </div>
+                Recent Entries
               </div>
-              Recent Entries
+              <div className="text-sm text-gray-500 font-medium">
+                {entries.length} total entries
+              </div>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -624,7 +649,7 @@ export function Dashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {entries.slice(0, 10).map((entry) => (
+                  {currentEntries.map((entry) => (
                     <tr key={entry.id} className="hover:bg-gray-50 transition-colors duration-200">
                       <td className="py-4 px-6 text-gray-700 font-medium">{new Date(entry.date).toLocaleDateString()}</td>
                       <td className="py-4 px-6 text-gray-900 font-medium max-w-xs truncate" title={entry.description}>
@@ -660,6 +685,15 @@ export function Dashboard() {
                 </tbody>
               </table>
             </div>
+            
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              totalItems={entries.length}
+              itemsPerPage={itemsPerPage}
+            />
           </CardContent>
         </Card>
       </div>
