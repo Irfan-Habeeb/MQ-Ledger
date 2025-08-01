@@ -273,8 +273,7 @@ export function Dashboard() {
           description: formData.description.trim(),
           type: formData.type,
           category: formData.category,
-          amount: amount,
-          created_by: user.email
+          amount: amount
         })
         .select()
 
