@@ -101,7 +101,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(255, 255, 255)
   doc.text('Total Income', 30, summaryY + 8)
   doc.setFontSize(14)
-  doc.setFontStyle('bold')
+  doc.setFont('helvetica', 'bold')
   doc.text(formatCurrencyForDisplay(totals.income), 30, summaryY + 18)
   
   // Expense card
@@ -114,7 +114,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(255, 255, 255)
   doc.text('Total Expenses', 100, summaryY + 8)
   doc.setFontSize(14)
-  doc.setFontStyle('bold')
+  doc.setFont('helvetica', 'bold')
   doc.text(formatCurrencyForDisplay(totals.expense), 100, summaryY + 18)
   
   // Balance card
@@ -127,11 +127,11 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(255, 255, 255)
   doc.text('Net Balance', 170, summaryY + 8)
   doc.setFontSize(14)
-  doc.setFontStyle('bold')
+  doc.setFont('helvetica', 'bold')
   doc.text(formatCurrencyForDisplay(totals.balance), 170, summaryY + 18)
   
   // Reset font
-  doc.setFontStyle('normal')
+  doc.setFont('helvetica', 'normal')
   
   // Transaction details section
   const tableY = summaryY + cardHeight + 30
