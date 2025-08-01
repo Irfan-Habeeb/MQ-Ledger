@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 export default function DebugPage() {
   const [cssVariables, setCssVariables] = useState<Record<string, string>>({})
@@ -85,12 +86,12 @@ export default function DebugPage() {
         </div>
 
         <div className="mt-8 text-center">
-          <a 
+          <Link 
             href="/"
             className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             ← Back to Main App
-          </a>
+          </Link>
         </div>
       </div>
     </div>
