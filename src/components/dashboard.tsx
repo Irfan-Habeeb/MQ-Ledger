@@ -291,6 +291,9 @@ export function Dashboard() {
 
       console.log('Entry added successfully:', data)
 
+      // Show success message
+      alert('✅ Entry added successfully!')
+
       // Reset form
       setFormData({
         date: new Date().toISOString().split('T')[0],
@@ -347,6 +350,12 @@ export function Dashboard() {
   }
 
   const handleExportPDF = (filters: FilterOptions) => {
+    // Check if it's "All Time" filter
+    if (filters.dateRange === 'all') {
+      alert('PDF export is not available for "All Time" filter. Please select a specific time period.')
+      return
+    }
+    
     const filteredEntries = getFilteredEntries(entries, filters)
     const filteredTotals = calculatePeriodTotals(filteredEntries)
     
