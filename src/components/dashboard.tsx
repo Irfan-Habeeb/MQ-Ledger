@@ -261,12 +261,6 @@ export function Dashboard() {
     }
   }
 
-  // Calculate pagination for filtered entries
-  const totalPages = useMemo(() => Math.ceil(filteredEntries.length / itemsPerPage), [filteredEntries.length, itemsPerPage])
-  const startIndex = useMemo(() => (currentPage - 1) * itemsPerPage, [currentPage, itemsPerPage])
-  const endIndex = useMemo(() => startIndex + itemsPerPage, [startIndex, itemsPerPage])
-  const currentEntries = useMemo(() => filteredEntries.slice(startIndex, endIndex), [filteredEntries, startIndex, endIndex])
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
     // Scroll to top of table
