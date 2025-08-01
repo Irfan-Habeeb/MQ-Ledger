@@ -111,7 +111,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.save(fileName)
 }
 
-const getFilterDescription = (filters: any): string => {
+const getFilterDescription = (filters: { dateRange: string; startDate?: string; endDate?: string; type?: string; category?: string }): string => {
   const parts = []
   
   if (filters.dateRange !== 'all') {
