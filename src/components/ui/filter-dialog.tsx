@@ -144,7 +144,7 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
           {/* Type Filter */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-700">Type</label>
-            <Select value={filters.type || 'All'}                 onValueChange={(value) => setFilters(prev => ({ ...prev, type: value as 'Income' | 'Expense' | 'All' }))}>
+            <Select value={filters.type || 'All'} onValueChange={(value: string) => setFilters(prev => ({ ...prev, type: value as 'Income' | 'Expense' | 'All' }))}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
