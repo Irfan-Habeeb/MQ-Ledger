@@ -150,15 +150,14 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.text('Transaction Details', margin, dividerY + 15)
   
   // Prepare table data
-  const tableHeaders = ['#', 'Date', 'Description', 'Type', 'Category', 'Amount', 'Created By']
+  const tableHeaders = ['#', 'Date', 'Description', 'Type', 'Category', 'Amount']
   const tableData = entries.map((entry, index) => [
     (index + 1).toString(),
     new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' }),
     entry.description.length > 40 ? entry.description.substring(0, 40) + '...' : entry.description,
     entry.type,
     entry.category,
-    formatCurrency(entry.amount),
-    entry.user_email || 'Unknown'
+    formatCurrency(entry.amount)
   ])
   
   // Smart table with professional styling
@@ -184,15 +183,14 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         halign: 'center',
         fontSize: 10
       },
-      columnStyles: {
-        0: { cellWidth: 15, halign: 'center' }, // #
-        1: { cellWidth: 25, halign: 'center' }, // Date
-        2: { cellWidth: 45, halign: 'left' },   // Description
-        3: { cellWidth: 25, halign: 'center' }, // Type
-        4: { cellWidth: 30, halign: 'left' },   // Category
-        5: { cellWidth: 35, halign: 'right' },  // Amount
-        6: { cellWidth: 40, halign: 'left' }    // Created By
-      },
+              columnStyles: {
+          0: { cellWidth: 15, halign: 'center' }, // #
+          1: { cellWidth: 25, halign: 'center' }, // Date
+          2: { cellWidth: 50, halign: 'left' },   // Description
+          3: { cellWidth: 25, halign: 'center' }, // Type
+          4: { cellWidth: 30, halign: 'left' },   // Category
+          5: { cellWidth: 35, halign: 'right' }   // Amount
+        },
       alternateRowStyles: {
         fillColor: [249, 250, 251]
       },
