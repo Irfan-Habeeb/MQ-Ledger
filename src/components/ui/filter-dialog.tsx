@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Calendar, Download, Filter, X } from 'lucide-react'
+import { Download, Filter, X } from 'lucide-react'
 
 export interface FilterOptions {
   dateRange: 'all' | 'current-month' | 'previous-month' | 'last-30' | 'last-60' | 'last-90' | 'custom'
@@ -144,7 +144,7 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
           {/* Type Filter */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-700">Type</label>
-            <Select value={filters.type || 'All'} onValueChange={(value) => setFilters(prev => ({ ...prev, type: value as any }))}>
+            <Select value={filters.type || 'All'}                 onValueChange={(value) => setFilters(prev => ({ ...prev, type: value as 'Income' | 'Expense' | 'All' }))}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
