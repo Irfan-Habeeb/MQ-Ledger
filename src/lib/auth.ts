@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { getSupabaseClient } from './supabase'
 
 export interface User {
   id: string
@@ -23,7 +23,8 @@ export const isUserAdmin = (email: string): boolean => {
 
 export const signInWithGoogle = async () => {
   try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const supabaseClient = getSupabaseClient()
+    const { data, error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`
@@ -40,7 +41,8 @@ export const signInWithGoogle = async () => {
 
 export const signOut = async () => {
   try {
-    const { error } = await supabase.auth.signOut()
+    const supabaseClient = getSupabaseClient()
+    const { error } = await supabaseClient.auth.signOut()
     if (error) throw error
     return { error: null }
   } catch (error) {
@@ -51,7 +53,8 @@ export const signOut = async () => {
 
 export const getCurrentUser = async (): Promise<User | null> => {
   try {
-    const { data: { user }, error } = await supabase.auth.getUser()
+    const supabaseClient = getSupabaseClient()
+    const { data: { user }, error } = await supabaseClient.auth.getUser()
     if (error) throw error
     
     if (user) {
@@ -71,7 +74,8 @@ export const getCurrentUser = async (): Promise<User | null> => {
 }
 
 export const onAuthStateChange = (callback: (user: User | null) => void) => {
-  return supabase.auth.onAuthStateChange(async (event, session) => {
+  const supabaseClient = getSupabaseClient()
+  return supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session?.user) {
       const user: User = {
         id: session.user.id,

@@ -10,7 +10,7 @@ import { SavingsRateChart } from '@/components/charts/savings-rate-chart'
 import { ExpenseRatioChart } from '@/components/charts/expense-ratio-chart'
 import { CategoryBreakdownChart } from '@/components/charts/category-breakdown-chart'
 import { formatCurrency, formatCurrencyForDisplay, getLast12Months, calculatePeriodTotals } from '@/lib/utils'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
 import { DollarSign, CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut } from 'lucide-react'
@@ -98,13 +98,14 @@ export function Dashboard() {
   const loadEntries = async () => {
     try {
       setLoading(true)
-      const { data, error } = await supabase
+      const supabaseClient = getSupabaseClient()
+      const { data, error } = await supabaseClient
         .from('accounting_entries')
         .select('*')
         .order('date', { ascending: false })
 
       if (error) throw error
-      setEntries(data || [])
+      setEntries((data as unknown as AccountingEntry[]) || [])
     } catch (error) {
       console.error('Error loading entries:', error)
     } finally {
@@ -191,7 +192,8 @@ export function Dashboard() {
     }
 
     try {
-      const { error } = await supabase
+      const supabaseClient = getSupabaseClient()
+      const { error } = await supabaseClient
         .from('accounting_entries')
         .insert({
           date: formData.date,
@@ -225,7 +227,8 @@ export function Dashboard() {
     if (!confirm('Are you sure you want to delete this entry?')) return
 
     try {
-      const { error } = await supabase
+      const supabaseClient = getSupabaseClient()
+      const { error } = await supabaseClient
         .from('accounting_entries')
         .delete()
         .eq('id', id)
