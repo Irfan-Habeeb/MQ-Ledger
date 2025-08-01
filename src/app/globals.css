@@ -1,6 +1,14 @@
+/* Tailwind CSS Directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Debug: This should be visible if CSS is loading */
+@layer base {
+  html {
+    background-color: red !important;
+  }
+}
 
 @layer base {
   :root {
