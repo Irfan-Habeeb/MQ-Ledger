@@ -12,10 +12,17 @@ interface UnauthorizedError extends Error {
 }
 
 // Authorized users for shared accounting access
-export const AUTHORIZED_USERS = [
+// You can add users in two ways:
+// 1. Add them to the array below
+// 2. Set the AUTHORIZED_USERS environment variable (comma-separated emails)
+const HARDCODED_USERS = [
   'mentorscue@gmail.com',
   // Add more users here as needed
 ]
+
+const ENV_USERS = process.env.NEXT_PUBLIC_AUTHORIZED_USERS?.split(',').map(email => email.trim()) || []
+
+export const AUTHORIZED_USERS = [...HARDCODED_USERS, ...ENV_USERS]
 
 export const isUserAuthorized = (email: string): boolean => {
   return AUTHORIZED_USERS.includes(email)
