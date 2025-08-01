@@ -90,6 +90,8 @@ export function Dashboard() {
       setUser(null)
       setIsAuthenticated(false)
       setEntries([])
+      // Force page refresh to ensure clean state
+      window.location.href = '/'
     } catch (error) {
       console.error('Error signing out:', error)
     }
@@ -279,14 +281,9 @@ export function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                  <DollarSign className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold">
-                  <span style={{ color: '#344e80' }}>MENTORS</span>
-                  <span style={{ color: '#43a24c' }}>CUE</span>
-                </div>
+              <div className="text-2xl font-bold" style={{ fontFamily: 'var(--font-montserrat), system-ui, sans-serif' }}>
+                <span style={{ color: '#344e80' }}>MENTORS</span>
+                <span style={{ color: '#43a24c' }}>CUE</span>
               </div>
               <div className="hidden lg:block h-8 w-px bg-gray-300"></div>
               <h1 className="hidden md:block text-xl font-semibold text-gray-900">Financial Dashboard</h1>
