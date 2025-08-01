@@ -13,8 +13,10 @@ import { formatCurrency, formatCurrencyForDisplay, getLast12Months, calculatePer
 import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
-import { DollarSign, CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target } from 'lucide-react'
+import { DollarSign, CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target, Filter, Download } from 'lucide-react'
 import { Pagination } from '@/components/ui/pagination'
+import { FilterDialog, FilterOptions } from '@/components/ui/filter-dialog'
+import { exportToPDF } from '@/lib/pdf-export'
 
 export function Dashboard() {
   const [entries, setEntries] = useState<AccountingEntry[]>([])
@@ -44,6 +46,14 @@ export function Dashboard() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+  
+  // Filter state
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false)
+  const [activeFilters, setActiveFilters] = useState<FilterOptions>({
+    dateRange: 'all',
+    type: 'All',
+    category: ''
+  })
 
   // Summary calculations - memoized for performance
   const totals = useMemo(() => calculatePeriodTotals(entries), [entries])
@@ -261,6 +271,67 @@ export function Dashboard() {
     setCurrentPage(page)
     // Scroll to top of table
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Filter and export functions
+  const handleApplyFilters = (filters: FilterOptions) => {
+    setActiveFilters(filters)
+    setCurrentPage(1) // Reset to first page when filtering
+  }
+
+  const handleExportPDF = (filters: FilterOptions) => {
+    const filteredEntries = getFilteredEntries(entries, filters)
+    const filteredTotals = calculatePeriodTotals(filteredEntries)
+    
+    exportToPDF({
+      entries: filteredEntries,
+      filters,
+      totals: filteredTotals
+    })
+  }
+
+  // Get unique categories for filter dropdown
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set(entries.map(entry => entry.category))
+    return Array.from(uniqueCategories).sort()
+  }, [entries])
+
+  // Filter entries based on active filters
+  const filteredEntries = useMemo(() => {
+    return getFilteredEntries(entries, activeFilters)
+  }, [entries, activeFilters])
+
+  // Calculate pagination for filtered entries
+  const totalPages = useMemo(() => Math.ceil(filteredEntries.length / itemsPerPage), [filteredEntries.length, itemsPerPage])
+  const startIndex = useMemo(() => (currentPage - 1) * itemsPerPage, [currentPage, itemsPerPage])
+  const endIndex = useMemo(() => startIndex + itemsPerPage, [startIndex, itemsPerPage])
+  const currentEntries = useMemo(() => filteredEntries.slice(startIndex, endIndex), [filteredEntries, startIndex, endIndex])
+
+  // Helper function to filter entries
+  const getFilteredEntries = (entries: AccountingEntry[], filters: FilterOptions): AccountingEntry[] => {
+    return entries.filter(entry => {
+      // Date range filter
+      if (filters.dateRange !== 'all') {
+        const entryDate = new Date(entry.date)
+        const startDate = filters.startDate ? new Date(filters.startDate) : null
+        const endDate = filters.endDate ? new Date(filters.endDate) : null
+        
+        if (startDate && entryDate < startDate) return false
+        if (endDate && entryDate > endDate) return false
+      }
+      
+      // Type filter
+      if (filters.type && filters.type !== 'All' && entry.type !== filters.type) {
+        return false
+      }
+      
+      // Category filter
+      if (filters.category && entry.category !== filters.category) {
+        return false
+      }
+      
+      return true
+    })
   }
 
   const toggleTrendDataset = (dataset: 'income' | 'expenses' | 'balance') => {
@@ -630,8 +701,28 @@ export function Dashboard() {
                 </div>
                 Recent Entries
               </div>
-              <div className="text-sm text-gray-500 font-medium">
-                {entries.length} total entries
+              <div className="flex items-center space-x-3">
+                <div className="text-sm text-gray-500 font-medium">
+                  {filteredEntries.length} of {entries.length} entries
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsFilterDialogOpen(true)}
+                  className="flex items-center space-x-2"
+                >
+                  <Filter className="h-4 w-4" />
+                  <span>Filter</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleExportPDF(activeFilters)}
+                  className="flex items-center space-x-2 text-green-600 hover:text-green-700"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Export</span>
+                </Button>
               </div>
             </CardTitle>
           </CardHeader>
@@ -697,6 +788,16 @@ export function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Filter Dialog */}
+      <FilterDialog
+        isOpen={isFilterDialogOpen}
+        onClose={() => setIsFilterDialogOpen(false)}
+        onApply={handleApplyFilters}
+        onExport={handleExportPDF}
+        currentFilters={activeFilters}
+        categories={categories}
+      />
     </div>
   )
 }
