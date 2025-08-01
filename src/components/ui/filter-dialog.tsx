@@ -26,7 +26,6 @@ interface FilterDialogProps {
 
 export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilters, categories }: FilterDialogProps) {
   const [filters, setFilters] = useState<FilterOptions>(() => ({
-    dateRange: 'all',
     type: 'All',
     category: '',
     ...currentFilters
@@ -35,7 +34,6 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
   // Update filters when currentFilters prop changes
   useEffect(() => {
     setFilters({
-      dateRange: 'all',
       type: 'All',
       category: '',
       ...currentFilters
