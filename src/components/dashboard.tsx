@@ -71,68 +71,6 @@ export function Dashboard() {
     checkUser()
   }, [])
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      loadEntries()
-    }
-  }, [isAuthenticated, user])
-
-  useEffect(() => {
-    if (entries.length > 0) {
-      calculateChartData()
-    }
-  }, [entries, categoryView, calculateChartData])
-
-  const checkUser = async () => {
-    try {
-      const user = await getCurrentUser()
-      if (user && isUserAuthorized(user.email)) {
-        setUser(user)
-        setIsAuthenticated(true)
-      } else {
-        setIsAuthenticated(false)
-        setUser(null)
-      }
-    } catch (error) {
-      console.error('Error checking user:', error)
-      setIsAuthenticated(false)
-      setUser(null)
-    }
-  }
-
-  const handleSignOut = async () => {
-    try {
-      const { error } = await signOut()
-      if (error) throw error
-      setUser(null)
-      setIsAuthenticated(false)
-      setEntries([])
-      // Force page refresh to ensure clean state
-      window.location.href = '/'
-    } catch (error) {
-      console.error('Error signing out:', error)
-    }
-  }
-
-  const loadEntries = async () => {
-    try {
-      setLoading(true)
-      const supabaseClient = getSupabaseClient()
-      const { data, error } = await supabaseClient
-        .from('accounting_entries')
-        .select('*')
-        .order('date', { ascending: false })
-
-      if (error) throw error
-      setEntries((data as unknown as AccountingEntry[]) || [])
-      setCurrentPage(1) // Reset to first page when loading new data
-    } catch (error) {
-      console.error('Error loading entries:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const calculateChartData = useCallback(() => {
     const months = getLast12Months()
     const monthlyData: MonthlyData = { labels: [], income: [], expenses: [], balance: [] }
@@ -196,6 +134,68 @@ export function Dashboard() {
       data: sortedCategories.map(([, amount]) => amount)
     })
   }, [entries, categoryView])
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      loadEntries()
+    }
+  }, [isAuthenticated, user])
+
+  useEffect(() => {
+    if (entries.length > 0) {
+      calculateChartData()
+    }
+  }, [entries, categoryView, calculateChartData])
+
+  const checkUser = async () => {
+    try {
+      const user = await getCurrentUser()
+      if (user && isUserAuthorized(user.email)) {
+        setUser(user)
+        setIsAuthenticated(true)
+      } else {
+        setIsAuthenticated(false)
+        setUser(null)
+      }
+    } catch (error) {
+      console.error('Error checking user:', error)
+      setIsAuthenticated(false)
+      setUser(null)
+    }
+  }
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await signOut()
+      if (error) throw error
+      setUser(null)
+      setIsAuthenticated(false)
+      setEntries([])
+      // Force page refresh to ensure clean state
+      window.location.href = '/'
+    } catch (error) {
+      console.error('Error signing out:', error)
+    }
+  }
+
+  const loadEntries = async () => {
+    try {
+      setLoading(true)
+      const supabaseClient = getSupabaseClient()
+      const { data, error } = await supabaseClient
+        .from('accounting_entries')
+        .select('*')
+        .order('date', { ascending: false })
+
+      if (error) throw error
+      setEntries((data as unknown as AccountingEntry[]) || [])
+      setCurrentPage(1) // Reset to first page when loading new data
+    } catch (error) {
+      console.error('Error loading entries:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
