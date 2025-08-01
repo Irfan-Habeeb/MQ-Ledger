@@ -806,6 +806,7 @@ export function Dashboard() {
                     <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Type</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Category</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Amount</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Created By</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
@@ -841,6 +842,11 @@ export function Dashboard() {
                         entry.type === 'Income' ? 'text-green-600' : 'text-red-600'
                       }`}>
                         {formatCurrency(entry.amount)}
+                      </td>
+                      <td className="py-4 px-6 text-gray-700 font-medium">
+                        <span className="px-2 py-1 bg-gray-100 rounded-md text-sm">
+                          {entry.created_by || 'Unknown'}
+                        </span>
                       </td>
                       <td className="py-4 px-6">
                         <Button
