@@ -13,7 +13,7 @@ import { formatCurrency, formatCurrencyForDisplay, getLast12Months, calculatePer
 import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
-import { DollarSign, CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target, Filter, Download } from 'lucide-react'
+import { CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target, Filter, Download } from 'lucide-react'
 import { Pagination } from '@/components/ui/pagination'
 import { FilterDialog, FilterOptions } from '@/components/ui/filter-dialog'
 import { exportToPDF } from '@/lib/pdf-export'
@@ -81,7 +81,7 @@ export function Dashboard() {
     if (entries.length > 0) {
       calculateChartData()
     }
-  }, [entries, categoryView])
+  }, [entries, categoryView, calculateChartData])
 
   const checkUser = async () => {
     try {
