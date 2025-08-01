@@ -259,7 +259,7 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#cedce7' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600 font-medium">Loading your financial dashboard...</p>
@@ -273,35 +273,36 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#cedce7' }}>
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200 sticky top-0 z-50">
+      <header className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                  <DollarSign className="h-5 w-5 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <DollarSign className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  MQ Ledger
+                <div className="text-2xl font-bold">
+                  <span style={{ color: '#344e80' }}>MENTORS</span>
+                  <span style={{ color: '#43a24c' }}>CUE</span>
                 </div>
               </div>
-              <div className="hidden md:block h-6 w-px bg-gray-300"></div>
-              <h1 className="text-lg font-semibold text-gray-900">Financial Dashboard</h1>
+              <div className="hidden lg:block h-8 w-px bg-gray-300"></div>
+              <h1 className="hidden md:block text-xl font-semibold text-gray-900">Financial Dashboard</h1>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full">
+              <div className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded-full">
                 <UserIcon className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-700 font-medium">{user.email}</span>
+                <span className="text-sm text-gray-700 font-medium truncate max-w-32">{user.email}</span>
               </div>
               <Button variant="outline" size="sm" onClick={loadEntries} className="hidden sm:flex">
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Refresh
+                <span className="hidden md:inline">Refresh</span>
               </Button>
               <Button variant="outline" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
+                <span className="hidden md:inline">Sign Out</span>
               </Button>
             </div>
           </div>
@@ -310,8 +311,8 @@ export function Dashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 hover:shadow-lg transition-shadow">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 hover:shadow-lg transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-green-700">Total Income</CardTitle>
               <div className="p-2 bg-green-100 rounded-lg">
@@ -328,7 +329,7 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-red-50 to-pink-50 border-red-200 hover:shadow-lg transition-shadow">
+          <Card className="bg-gradient-to-br from-red-50 to-pink-50 border-red-200 hover:shadow-lg transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-red-700">Total Expenses</CardTitle>
               <div className="p-2 bg-red-100 rounded-lg">
@@ -345,7 +346,7 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 hover:shadow-lg transition-shadow">
+          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 hover:shadow-lg transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-blue-700">Net Balance</CardTitle>
               <div className="p-2 bg-blue-100 rounded-lg">
@@ -362,7 +363,7 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 hover:shadow-lg transition-shadow">
+          <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 hover:shadow-lg transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-purple-700">Savings Rate</CardTitle>
               <div className="p-2 bg-purple-100 rounded-lg">
@@ -381,7 +382,7 @@ export function Dashboard() {
         </div>
 
         {/* Add Entry Form */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
+        <Card className="mb-8 bg-white shadow-lg border-gray-200">
           <CardHeader>
             <CardTitle className="flex items-center text-lg">
               <div className="p-2 bg-blue-100 rounded-lg mr-3">
@@ -391,7 +392,7 @@ export function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Date</label>
                 <Input
@@ -399,23 +400,23 @@ export function Dashboard() {
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   required
-                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 md:col-span-2">
                 <label className="text-sm font-medium text-gray-700">Description</label>
                 <Input
                   placeholder="Enter description"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   required
-                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11"
                 />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Type</label>
                 <Select value={formData.type} onValueChange={(value: 'Income' | 'Expense') => setFormData({ ...formData, type: value, category: '' })}>
-                  <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                  <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -427,7 +428,7 @@ export function Dashboard() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Category</label>
                 <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                  <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                  <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -446,9 +447,9 @@ export function Dashboard() {
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     required
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11"
                   />
-                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6">
+                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 h-11">
                     Add
                   </Button>
                 </div>
@@ -460,7 +461,7 @@ export function Dashboard() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Monthly Trends */}
-          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
+          <Card className="bg-white shadow-lg border-gray-200">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <div className="p-2 bg-green-100 rounded-lg mr-3">
@@ -468,7 +469,7 @@ export function Dashboard() {
                 </div>
                 Monthly Trends
               </CardTitle>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant={visibleTrendDatasets.includes('income') ? 'default' : 'outline'}
                   size="sm"
@@ -501,7 +502,7 @@ export function Dashboard() {
           </Card>
 
           {/* Category Breakdown */}
-          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
+          <Card className="bg-white shadow-lg border-gray-200">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <div className="p-2 bg-purple-100 rounded-lg mr-3">
@@ -509,7 +510,7 @@ export function Dashboard() {
                 </div>
                 Category Breakdown
               </CardTitle>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant={categoryView === 'Expense' ? 'default' : 'outline'}
                   size="sm"
@@ -544,7 +545,7 @@ export function Dashboard() {
 
         {/* Additional Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
+          <Card className="bg-white shadow-lg border-gray-200">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <div className="p-2 bg-emerald-100 rounded-lg mr-3">
@@ -558,7 +559,7 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
+          <Card className="bg-white shadow-lg border-gray-200">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <div className="p-2 bg-orange-100 rounded-lg mr-3">
@@ -572,7 +573,7 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
+          <Card className="bg-white shadow-lg border-gray-200">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <div className="p-2 bg-indigo-100 rounded-lg mr-3">
@@ -603,7 +604,7 @@ export function Dashboard() {
         </div>
 
         {/* Entries Table */}
-        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
+        <Card className="bg-white shadow-lg border-gray-200">
           <CardHeader>
             <CardTitle className="flex items-center">
               <div className="p-2 bg-gray-100 rounded-lg mr-3">
@@ -616,22 +617,24 @@ export function Dashboard() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Date</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Description</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Type</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Category</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Amount</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Date</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Description</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Type</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Category</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Amount</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                   {entries.slice(0, 10).map((entry) => (
-                    <tr key={entry.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
-                      <td className="py-3 px-4 text-gray-700">{new Date(entry.date).toLocaleDateString()}</td>
-                      <td className="py-3 px-4 text-gray-900 font-medium">{entry.description}</td>
-                      <td className="py-3 px-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    <tr key={entry.id} className="hover:bg-gray-50 transition-colors duration-200">
+                      <td className="py-4 px-6 text-gray-700 font-medium">{new Date(entry.date).toLocaleDateString()}</td>
+                      <td className="py-4 px-6 text-gray-900 font-medium max-w-xs truncate" title={entry.description}>
+                        {entry.description}
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
                           entry.type === 'Income' 
                             ? 'bg-green-100 text-green-800' 
                             : 'bg-red-100 text-red-800'
@@ -639,18 +642,18 @@ export function Dashboard() {
                           {entry.type}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-gray-700">{entry.category}</td>
-                      <td className={`py-3 px-4 font-semibold ${
+                      <td className="py-4 px-6 text-gray-700 font-medium">{entry.category}</td>
+                      <td className={`py-4 px-6 font-bold text-lg ${
                         entry.type === 'Income' ? 'text-green-600' : 'text-red-600'
                       }`}>
                         {formatCurrency(entry.amount)}
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-4 px-6">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleDelete(entry.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
