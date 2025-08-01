@@ -55,6 +55,10 @@ export function Dashboard() {
     category: ''
   })
 
+  useEffect(() => {
+    checkUser()
+  }, [])
+
   // Summary calculations - memoized for performance
   const totals = useMemo(() => calculatePeriodTotals(entries), [entries])
   const currentMonth = new Date().getMonth()
@@ -66,10 +70,6 @@ export function Dashboard() {
     }), [entries, currentMonth, currentYear]
   )
   const currentMonthTotals = useMemo(() => calculatePeriodTotals(currentMonthEntries), [currentMonthEntries])
-
-  useEffect(() => {
-    checkUser()
-  }, [])
 
   const calculateChartData = useCallback(() => {
     const months = getLast12Months()

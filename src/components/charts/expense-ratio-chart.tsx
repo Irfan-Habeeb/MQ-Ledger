@@ -1,26 +1,9 @@
 'use client'
 
 import React from 'react'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 import { ExpenseRatioData } from '@/types'
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-)
+import '@/lib/chart-config'
 
 interface ExpenseRatioChartProps {
   data: ExpenseRatioData
