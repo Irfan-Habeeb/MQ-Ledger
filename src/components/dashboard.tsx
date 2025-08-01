@@ -256,8 +256,17 @@ export function Dashboard() {
         return
       }
 
+      console.log('Submitting entry:', {
+        date: formData.date,
+        description: formData.description.trim(),
+        type: formData.type,
+        category: formData.category,
+        amount: amount,
+        created_by: user.email
+      })
+
       const supabaseClient = getSupabaseClient()
-      const { error } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from('accounting_entries')
         .insert({
           date: formData.date,
@@ -267,11 +276,20 @@ export function Dashboard() {
           amount: amount,
           created_by: user.email
         })
+        .select()
 
       if (error) {
-        console.error('Supabase error:', error)
+              console.error('Supabase error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+        fullError: error
+      })
         throw error
       }
+
+      console.log('Entry added successfully:', data)
 
       // Reset form
       setFormData({
@@ -286,7 +304,15 @@ export function Dashboard() {
       loadEntries()
     } catch (error) {
       console.error('Error adding entry:', error)
-      alert(`Error adding entry: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      let errorMessage = 'Unknown error'
+      
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'object' && error !== null) {
+        errorMessage = JSON.stringify(error)
+      }
+      
+      alert(`Error adding entry: ${errorMessage}`)
     }
   }
 
@@ -359,6 +385,10 @@ export function Dashboard() {
   const getCategoryOptions = (type: 'Income' | 'Expense') => {
     const categories = {
       Income: [
+        'Salary',
+        'Freelance',
+        'Investment',
+        'Business',
         'Tuition Fees',
         'Online Course Sales',
         'Coaching Sessions',
@@ -371,6 +401,13 @@ export function Dashboard() {
         'Other Income'
       ],
       Expense: [
+        'Food',
+        'Transport',
+        'Entertainment',
+        'Shopping',
+        'Bills',
+        'Healthcare',
+        'Education',
         'Teacher Salaries',
         'Platform Subscriptions',
         'Marketing & Ads',
