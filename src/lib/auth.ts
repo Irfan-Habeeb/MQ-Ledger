@@ -62,7 +62,9 @@ export const getCurrentUser = async (): Promise<User | null> => {
       if (!isUserAuthorized(user.email!)) {
         // Sign out unauthorized user
         await supabaseClient.auth.signOut()
-        throw new Error('UNAUTHORIZED_USER')
+        const unauthorizedError = new Error('UNAUTHORIZED_USER')
+        ;(unauthorizedError as any).email = user.email
+        throw unauthorizedError
       }
       
       return {
@@ -76,7 +78,7 @@ export const getCurrentUser = async (): Promise<User | null> => {
     return null
   } catch (error) {
     console.error('Error getting current user:', error)
-    return null
+    throw error // Re-throw to let the calling code handle it
   }
 }
 

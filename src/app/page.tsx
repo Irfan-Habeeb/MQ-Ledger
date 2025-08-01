@@ -23,16 +23,16 @@ export default function Home() {
           setIsAuthenticated(false)
           setError(null)
         }
-              } catch (error: unknown) {
-          console.error('Auth check error:', error)
-          if (error instanceof Error && error.message === 'UNAUTHORIZED_USER') {
-            setError('UNAUTHORIZED_USER')
-            setUnauthorizedEmail((error as { email?: string }).email || 'Unknown email')
-          } else {
-            setError('Failed to check authentication')
-          }
-          setIsAuthenticated(false)
-        } finally {
+      } catch (error: unknown) {
+        console.error('Auth check error:', error)
+        if (error instanceof Error && error.message === 'UNAUTHORIZED_USER') {
+          setError('UNAUTHORIZED_USER')
+          setUnauthorizedEmail((error as { email?: string }).email || 'Unknown email')
+        } else {
+          setError('Failed to check authentication')
+        }
+        setIsAuthenticated(false)
+      } finally {
         setIsLoading(false)
       }
     }
