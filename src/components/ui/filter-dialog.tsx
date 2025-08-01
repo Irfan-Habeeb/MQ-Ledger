@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,7 +25,22 @@ interface FilterDialogProps {
 }
 
 export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilters, categories }: FilterDialogProps) {
-  const [filters, setFilters] = useState<FilterOptions>(currentFilters)
+  const [filters, setFilters] = useState<FilterOptions>(() => ({
+    dateRange: 'all',
+    type: 'All',
+    category: '',
+    ...currentFilters
+  }))
+
+  // Update filters when currentFilters prop changes
+  useEffect(() => {
+    setFilters({
+      dateRange: 'all',
+      type: 'All',
+      category: '',
+      ...currentFilters
+    })
+  }, [currentFilters])
 
   const handleDateRangeChange = (range: string) => {
     const today = new Date()
@@ -68,21 +83,33 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
   }
 
   const handleApply = () => {
-    onApply(filters)
-    onClose()
+    try {
+      onApply(filters)
+      onClose()
+    } catch (error) {
+      console.error('Error applying filters:', error)
+    }
   }
 
   const handleExport = () => {
-    onExport(filters)
-    onClose()
+    try {
+      onExport(filters)
+      onClose()
+    } catch (error) {
+      console.error('Error exporting PDF:', error)
+    }
   }
 
   const handleReset = () => {
-    setFilters({
-      dateRange: 'all',
-      type: 'All',
-      category: ''
-    })
+    try {
+      setFilters({
+        dateRange: 'all',
+        type: 'All',
+        category: ''
+      })
+    } catch (error) {
+      console.error('Error resetting filters:', error)
+    }
   }
 
   if (!isOpen) return null
@@ -103,9 +130,9 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
           {/* Date Range Filter */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-700">Date Range</label>
-            <Select value={filters.dateRange} onValueChange={handleDateRangeChange}>
+            <Select value={filters.dateRange || 'all'} onValueChange={handleDateRangeChange}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Select date range" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Time</SelectItem>
@@ -146,7 +173,7 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
             <label className="text-sm font-medium text-gray-700">Type</label>
             <Select value={filters.type || 'All'} onValueChange={(value: string) => setFilters(prev => ({ ...prev, type: value as 'Income' | 'Expense' | 'All' }))}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="All">All Types</SelectItem>
@@ -165,9 +192,9 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">All Categories</SelectItem>
-                {categories.map(category => (
+                {categories?.map(category => (
                   <SelectItem key={category} value={category}>{category}</SelectItem>
-                ))}
+                )) || []}
               </SelectContent>
             </Select>
           </div>
