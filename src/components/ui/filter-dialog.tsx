@@ -27,7 +27,7 @@ interface FilterDialogProps {
 export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilters, categories }: FilterDialogProps) {
   const [filters, setFilters] = useState<FilterOptions>(() => ({
     type: 'All',
-    category: '',
+    category: 'all',
     ...currentFilters
   }))
 
@@ -35,7 +35,7 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
   useEffect(() => {
     setFilters({
       type: 'All',
-      category: '',
+      category: 'all',
       ...currentFilters
     })
   }, [currentFilters])
@@ -103,7 +103,7 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
       setFilters({
         dateRange: 'all',
         type: 'All',
-        category: ''
+        category: 'all'
       })
     } catch (error) {
       console.error('Error resetting filters:', error)
@@ -184,12 +184,12 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
           {/* Category Filter */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-700">Category</label>
-            <Select value={filters.category || ''} onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}>
+            <Select value={filters.category || 'all'} onValueChange={(value) => setFilters(prev => ({ ...prev, category: value === 'all' ? '' : value }))}>
               <SelectTrigger>
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 {categories?.map(category => (
                   <SelectItem key={category} value={category}>{category}</SelectItem>
                 )) || []}
