@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,7 +13,7 @@ import { formatCurrency, formatCurrencyForDisplay, getLast12Months, calculatePer
 import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
-import { DollarSign, CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut } from 'lucide-react'
+import { DollarSign, CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target } from 'lucide-react'
 
 export function Dashboard() {
   const [entries, setEntries] = useState<AccountingEntry[]>([])
@@ -113,7 +113,7 @@ export function Dashboard() {
     }
   }
 
-  const calculateChartData = () => {
+  const calculateChartData = useCallback(() => {
     const months = getLast12Months()
     const monthlyData: MonthlyData = { labels: [], income: [], expenses: [], balance: [] }
     const savingsRateData: SavingsRateData = { labels: [], data: [] }
@@ -175,7 +175,7 @@ export function Dashboard() {
       labels: sortedCategories.map(([category]) => category),
       data: sortedCategories.map(([, amount]) => amount)
     })
-  }
+  }, [entries, categoryView])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -259,8 +259,11 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading your financial dashboard...</p>
+        </div>
       </div>
     )
   }
@@ -270,24 +273,29 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <div className="text-2xl font-bold text-blue-600">Mentorscue</div>
-                <div className="text-2xl font-bold text-gray-800">Cue</div>
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <DollarSign className="h-5 w-5 text-white" />
+                </div>
+                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  MQ Ledger
+                </div>
               </div>
-              <h1 className="text-xl font-semibold text-gray-900">Accounting Dashboard</h1>
+              <div className="hidden md:block h-6 w-px bg-gray-300"></div>
+              <h1 className="text-lg font-semibold text-gray-900">Financial Dashboard</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <UserIcon className="h-5 w-5 text-gray-500" />
-                <span className="text-sm text-gray-700">{user.email}</span>
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full">
+                <UserIcon className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-700 font-medium">{user.email}</span>
               </div>
-              <Button variant="outline" size="sm" onClick={loadEntries}>
+              <Button variant="outline" size="sm" onClick={loadEntries} className="hidden sm:flex">
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
@@ -302,62 +310,70 @@ export function Dashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-              <DollarSign className="h-4 w-4 text-green-600" />
+              <CardTitle className="text-sm font-medium text-green-700">Total Income</CardTitle>
+              <div className="p-2 bg-green-100 rounded-lg">
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-green-700">
                 {formatCurrencyForDisplay(totals.income)}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-green-600 mt-1">
                 This month: {formatCurrencyForDisplay(currentMonthTotals.income)}
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-gradient-to-br from-red-50 to-pink-50 border-red-200 hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-              <CreditCard className="h-4 w-4 text-red-600" />
+              <CardTitle className="text-sm font-medium text-red-700">Total Expenses</CardTitle>
+              <div className="p-2 bg-red-100 rounded-lg">
+                <TrendingDown className="h-4 w-4 text-red-600" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">
+              <div className="text-2xl font-bold text-red-700">
                 {formatCurrencyForDisplay(totals.expense)}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-red-600 mt-1">
                 This month: {formatCurrencyForDisplay(currentMonthTotals.expense)}
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
-              <BarChart3 className="h-4 w-4 text-blue-600" />
+              <CardTitle className="text-sm font-medium text-blue-700">Net Balance</CardTitle>
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <BarChart3 className="h-4 w-4 text-blue-600" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl font-bold ${totals.balance >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+              <div className={`text-2xl font-bold ${totals.balance >= 0 ? 'text-blue-700' : 'text-red-700'}`}>
                 {formatCurrencyForDisplay(totals.balance)}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className={`text-xs mt-1 ${totals.balance >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
                 This month: {formatCurrencyForDisplay(currentMonthTotals.balance)}
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Savings Rate</CardTitle>
-              <PiggyBank className="h-4 w-4 text-green-600" />
+              <CardTitle className="text-sm font-medium text-purple-700">Savings Rate</CardTitle>
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Target className="h-4 w-4 text-purple-600" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-purple-700">
                 {totals.income > 0 ? ((totals.balance / totals.income) * 100).toFixed(1) : '0'}%
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-purple-600 mt-1">
                 {totals.income > 0 ? `${((totals.balance / totals.income) * 100).toFixed(1)}% of income saved` : 'No income data'}
               </p>
             </CardContent>
@@ -365,55 +381,77 @@ export function Dashboard() {
         </div>
 
         {/* Add Entry Form */}
-        <Card className="mb-8">
+        <Card className="mb-8 bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <Plus className="h-5 w-5 mr-2" />
+            <CardTitle className="flex items-center text-lg">
+              <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                <Plus className="h-5 w-5 text-blue-600" />
+              </div>
               Add New Entry
             </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              <Input
-                type="date"
-                value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                required
-              />
-              <Input
-                placeholder="Description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                required
-              />
-              <Select value={formData.type} onValueChange={(value: 'Income' | 'Expense') => setFormData({ ...formData, type: value, category: '' })}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Income">Income</SelectItem>
-                  <SelectItem value="Expense">Expense</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {getCategoryOptions(formData.type).map(category => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="flex space-x-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Date</label>
                 <Input
-                  type="number"
-                  placeholder="Amount"
-                  value={formData.amount}
-                  onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   required
+                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 />
-                <Button type="submit">Add</Button>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Description</label>
+                <Input
+                  placeholder="Enter description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  required
+                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Type</label>
+                <Select value={formData.type} onValueChange={(value: 'Income' | 'Expense') => setFormData({ ...formData, type: value, category: '' })}>
+                  <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Income">Income</SelectItem>
+                    <SelectItem value="Expense">Expense</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Category</label>
+                <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                  <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getCategoryOptions(formData.type).map(category => (
+                      <SelectItem key={category} value={category}>{category}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Amount</label>
+                <div className="flex space-x-2">
+                  <Input
+                    type="number"
+                    placeholder="0.00"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                    required
+                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6">
+                    Add
+                  </Button>
+                </div>
               </div>
             </form>
           </CardContent>
@@ -422,14 +460,20 @@ export function Dashboard() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Monthly Trends */}
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
             <CardHeader>
-              <CardTitle>Monthly Trends</CardTitle>
+              <CardTitle className="flex items-center">
+                <div className="p-2 bg-green-100 rounded-lg mr-3">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                </div>
+                Monthly Trends
+              </CardTitle>
               <div className="flex space-x-2">
                 <Button
                   variant={visibleTrendDatasets.includes('income') ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleTrendDataset('income')}
+                  className={visibleTrendDatasets.includes('income') ? 'bg-green-600 hover:bg-green-700' : ''}
                 >
                   Income
                 </Button>
@@ -437,6 +481,7 @@ export function Dashboard() {
                   variant={visibleTrendDatasets.includes('expenses') ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleTrendDataset('expenses')}
+                  className={visibleTrendDatasets.includes('expenses') ? 'bg-red-600 hover:bg-red-700' : ''}
                 >
                   Expenses
                 </Button>
@@ -444,6 +489,7 @@ export function Dashboard() {
                   variant={visibleTrendDatasets.includes('balance') ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleTrendDataset('balance')}
+                  className={visibleTrendDatasets.includes('balance') ? 'bg-blue-600 hover:bg-blue-700' : ''}
                 >
                   Balance
                 </Button>
@@ -455,14 +501,20 @@ export function Dashboard() {
           </Card>
 
           {/* Category Breakdown */}
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
             <CardHeader>
-              <CardTitle>Category Breakdown</CardTitle>
+              <CardTitle className="flex items-center">
+                <div className="p-2 bg-purple-100 rounded-lg mr-3">
+                  <BarChart3 className="h-5 w-5 text-purple-600" />
+                </div>
+                Category Breakdown
+              </CardTitle>
               <div className="flex space-x-2">
                 <Button
                   variant={categoryView === 'Expense' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setCategoryView('Expense')}
+                  className={categoryView === 'Expense' ? 'bg-red-600 hover:bg-red-700' : ''}
                 >
                   Expenses
                 </Button>
@@ -470,6 +522,7 @@ export function Dashboard() {
                   variant={categoryView === 'Income' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setCategoryView('Income')}
+                  className={categoryView === 'Income' ? 'bg-green-600 hover:bg-green-700' : ''}
                 >
                   Income
                 </Button>
@@ -477,6 +530,7 @@ export function Dashboard() {
                   variant={categoryView === 'All' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setCategoryView('All')}
+                  className={categoryView === 'All' ? 'bg-purple-600 hover:bg-purple-700' : ''}
                 >
                   All
                 </Button>
@@ -490,74 +544,94 @@ export function Dashboard() {
 
         {/* Additional Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
             <CardHeader>
-              <CardTitle>Savings Rate Trend</CardTitle>
+              <CardTitle className="flex items-center">
+                <div className="p-2 bg-emerald-100 rounded-lg mr-3">
+                  <PiggyBank className="h-5 w-5 text-emerald-600" />
+                </div>
+                Savings Rate Trend
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <SavingsRateChart data={savingsRateData} />
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
             <CardHeader>
-              <CardTitle>Expense vs Income Ratio</CardTitle>
+              <CardTitle className="flex items-center">
+                <div className="p-2 bg-orange-100 rounded-lg mr-3">
+                  <CreditCard className="h-5 w-5 text-orange-600" />
+                </div>
+                Expense vs Income Ratio
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <ExpenseRatioChart data={expenseRatioData} />
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
             <CardHeader>
-              <CardTitle>Quick Stats</CardTitle>
+              <CardTitle className="flex items-center">
+                <div className="p-2 bg-indigo-100 rounded-lg mr-3">
+                  <Target className="h-5 w-5 text-indigo-600" />
+                </div>
+                Quick Stats
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{entries.length}</div>
-                <div className="text-sm text-gray-600">Total Entries</div>
+            <CardContent className="space-y-6">
+              <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+                <div className="text-3xl font-bold text-blue-600">{entries.length}</div>
+                <div className="text-sm text-gray-600 mt-1">Total Entries</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
+              <div className="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg">
+                <div className="text-3xl font-bold text-green-600">
                   {totals.income > 0 ? ((totals.balance / totals.income) * 100).toFixed(1) : '0'}%
                 </div>
-                <div className="text-sm text-gray-600">Overall Savings Rate</div>
+                <div className="text-sm text-gray-600 mt-1">Overall Savings Rate</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">
+              <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg">
+                <div className="text-3xl font-bold text-purple-600">
                   {new Set(entries.map(e => e.category)).size}
                 </div>
-                <div className="text-sm text-gray-600">Categories Used</div>
+                <div className="text-sm text-gray-600 mt-1">Categories Used</div>
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Entries Table */}
-        <Card>
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
           <CardHeader>
-            <CardTitle>Recent Entries</CardTitle>
+            <CardTitle className="flex items-center">
+              <div className="p-2 bg-gray-100 rounded-lg mr-3">
+                <BarChart3 className="h-5 w-5 text-gray-600" />
+              </div>
+              Recent Entries
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2">Date</th>
-                    <th className="text-left py-2">Description</th>
-                    <th className="text-left py-2">Type</th>
-                    <th className="text-left py-2">Category</th>
-                    <th className="text-left py-2">Amount</th>
-                    <th className="text-left py-2">Actions</th>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Date</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Description</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Type</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Category</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Amount</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {entries.slice(0, 10).map((entry) => (
-                    <tr key={entry.id} className="border-b hover:bg-gray-50">
-                      <td className="py-2">{new Date(entry.date).toLocaleDateString()}</td>
-                      <td className="py-2">{entry.description}</td>
-                      <td className="py-2">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
+                    <tr key={entry.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                      <td className="py-3 px-4 text-gray-700">{new Date(entry.date).toLocaleDateString()}</td>
+                      <td className="py-3 px-4 text-gray-900 font-medium">{entry.description}</td>
+                      <td className="py-3 px-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           entry.type === 'Income' 
                             ? 'bg-green-100 text-green-800' 
                             : 'bg-red-100 text-red-800'
@@ -565,17 +639,18 @@ export function Dashboard() {
                           {entry.type}
                         </span>
                       </td>
-                      <td className="py-2">{entry.category}</td>
-                      <td className={`py-2 font-medium ${
+                      <td className="py-3 px-4 text-gray-700">{entry.category}</td>
+                      <td className={`py-3 px-4 font-semibold ${
                         entry.type === 'Income' ? 'text-green-600' : 'text-red-600'
                       }`}>
                         {formatCurrency(entry.amount)}
                       </td>
-                      <td className="py-2">
+                      <td className="py-3 px-4">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleDelete(entry.id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
