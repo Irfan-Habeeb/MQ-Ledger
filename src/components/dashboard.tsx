@@ -245,19 +245,33 @@ export function Dashboard() {
     }
 
     try {
+      // Validate required fields
+      if (!formData.description.trim()) {
+        alert('Please enter a description')
+        return
+      }
+      
+      if (!formData.category) {
+        alert('Please select a category')
+        return
+      }
+
       const supabaseClient = getSupabaseClient()
       const { error } = await supabaseClient
         .from('accounting_entries')
         .insert({
           date: formData.date,
-          description: formData.description,
+          description: formData.description.trim(),
           type: formData.type,
           category: formData.category,
           amount: amount,
           created_by: user.email
         })
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase error:', error)
+        throw error
+      }
 
       // Reset form
       setFormData({
@@ -272,7 +286,7 @@ export function Dashboard() {
       loadEntries()
     } catch (error) {
       console.error('Error adding entry:', error)
-      alert('Error adding entry')
+      alert(`Error adding entry: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
@@ -390,7 +404,7 @@ export function Dashboard() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#cedce7' }}>
       {/* Header */}
-      <header className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
+      <header className="backdrop-blur-md bg-white/80 shadow-lg border-b border-gray-200/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-6">
@@ -402,7 +416,7 @@ export function Dashboard() {
               <h1 className="hidden md:block text-xl font-semibold text-gray-900">Financial Dashboard</h1>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded-full">
+              <div className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gray-100/80 backdrop-blur-sm rounded-full">
                 <UserIcon className="h-4 w-4 text-gray-500" />
                 <span className="text-sm text-gray-700 font-medium truncate max-w-32">{user.email}</span>
               </div>
@@ -422,70 +436,70 @@ export function Dashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 hover:shadow-lg transition-all duration-300">
+          <Card className="bg-gradient-to-br from-green-500 to-green-600 shadow-lg border-0 overflow-hidden hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-green-700">Total Income</CardTitle>
-              <div className="p-2 bg-green-100 rounded-lg">
-                <TrendingUp className="h-4 w-4 text-green-600" />
+              <CardTitle className="text-sm font-medium text-white/90">Monthly Income</CardTitle>
+              <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                <TrendingUp className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-700">
-                {formatCurrencyForDisplay(totals.income)}
+              <div className="text-2xl font-bold text-white">
+                {formatCurrencyForDisplay(currentMonthTotals.income)}
               </div>
-              <p className="text-xs text-green-600 mt-1">
-                This month: {formatCurrencyForDisplay(currentMonthTotals.income)}
+              <p className="text-xs text-white/80 mt-1">
+                Total: {formatCurrencyForDisplay(totals.income)}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-red-50 to-pink-50 border-red-200 hover:shadow-lg transition-all duration-300">
+          <Card className="bg-gradient-to-br from-red-500 to-red-600 shadow-lg border-0 overflow-hidden hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-red-700">Total Expenses</CardTitle>
-              <div className="p-2 bg-red-100 rounded-lg">
-                <TrendingDown className="h-4 w-4 text-red-600" />
+              <CardTitle className="text-sm font-medium text-white/90">Monthly Expenses</CardTitle>
+              <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                <TrendingDown className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-700">
-                {formatCurrencyForDisplay(totals.expense)}
+              <div className="text-2xl font-bold text-white">
+                {formatCurrencyForDisplay(currentMonthTotals.expense)}
               </div>
-              <p className="text-xs text-red-600 mt-1">
-                This month: {formatCurrencyForDisplay(currentMonthTotals.expense)}
+              <p className="text-xs text-white/80 mt-1">
+                Total: {formatCurrencyForDisplay(totals.expense)}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 hover:shadow-lg transition-all duration-300">
+          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg border-0 overflow-hidden hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-blue-700">Net Balance</CardTitle>
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <BarChart3 className="h-4 w-4 text-blue-600" />
+              <CardTitle className="text-sm font-medium text-white/90">Monthly Balance</CardTitle>
+              <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                <BarChart3 className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl font-bold ${totals.balance >= 0 ? 'text-blue-700' : 'text-red-700'}`}>
-                {formatCurrencyForDisplay(totals.balance)}
+              <div className="text-2xl font-bold text-white">
+                {formatCurrencyForDisplay(currentMonthTotals.balance)}
               </div>
-              <p className={`text-xs mt-1 ${totals.balance >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
-                This month: {formatCurrencyForDisplay(currentMonthTotals.balance)}
+              <p className="text-xs text-white/80 mt-1">
+                Total: {formatCurrencyForDisplay(totals.balance)}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 hover:shadow-lg transition-all duration-300">
+          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg border-0 overflow-hidden hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-purple-700">Savings Rate</CardTitle>
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Target className="h-4 w-4 text-purple-600" />
+              <CardTitle className="text-sm font-medium text-white/90">Monthly Entries</CardTitle>
+              <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                <Target className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-700">
-                {totals.income > 0 ? ((totals.balance / totals.income) * 100).toFixed(1) : '0'}%
+              <div className="text-2xl font-bold text-white">
+                {currentMonthEntries.length}
               </div>
-              <p className="text-xs text-purple-600 mt-1">
-                {totals.income > 0 ? `${((totals.balance / totals.income) * 100).toFixed(1)}% of income saved` : 'No income data'}
+              <p className="text-xs text-white/80 mt-1">
+                Total: {entries.length} entries
               </p>
             </CardContent>
           </Card>
