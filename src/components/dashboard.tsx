@@ -262,11 +262,11 @@ export function Dashboard() {
         type: formData.type,
         category: formData.category,
         amount: amount,
-        created_by: user.email
+        user_email: user.email
       })
 
       const supabaseClient = getSupabaseClient()
-      const { data, error } = await supabaseClient
+              const { data, error } = await supabaseClient
         .from('accounting_entries')
         .insert({
           date: formData.date,
@@ -274,7 +274,7 @@ export function Dashboard() {
           type: formData.type,
           category: formData.category,
           amount: amount,
-          created_by: user.email
+          user_email: user.email
         })
         .select()
 
@@ -845,7 +845,7 @@ export function Dashboard() {
                       </td>
                       <td className="py-4 px-6 text-gray-700 font-medium">
                         <span className="px-2 py-1 bg-gray-100 rounded-md text-sm">
-                          {entry.created_by || 'Unknown'}
+                          {entry.user_email || 'Unknown'}
                         </span>
                       </td>
                       <td className="py-4 px-6">

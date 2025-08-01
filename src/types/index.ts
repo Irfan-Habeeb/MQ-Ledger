@@ -5,7 +5,7 @@ export interface AccountingEntry {
   type: 'Income' | 'Expense'
   category: string
   amount: number
-  created_by: string
+  user_email: string
   created_at: string
 }
 
