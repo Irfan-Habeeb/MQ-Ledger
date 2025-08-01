@@ -58,8 +58,24 @@ export const signOut = async () => {
 export const getCurrentUser = async (): Promise<User | null> => {
   try {
     const supabaseClient = getSupabaseClient()
+    
+    // First check if there's an active session
+    const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession()
+    if (sessionError) {
+      console.error('Session error:', sessionError)
+      return null
+    }
+    
+    if (!session) {
+      console.log('No active session found')
+      return null
+    }
+    
     const { data: { user }, error } = await supabaseClient.auth.getUser()
-    if (error) throw error
+    if (error) {
+      console.error('Error getting user:', error)
+      return null
+    }
     
     if (user) {
       // Check if user is authorized
@@ -82,7 +98,11 @@ export const getCurrentUser = async (): Promise<User | null> => {
     return null
   } catch (error) {
     console.error('Error getting current user:', error)
-    throw error // Re-throw to let the calling code handle it
+    // Don't re-throw session-related errors, just return null
+    if (error instanceof Error && error.message.includes('Auth session missing')) {
+      return null
+    }
+    throw error
   }
 }
 
