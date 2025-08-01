@@ -6,7 +6,27 @@ import { formatCurrency, formatCurrencyForDisplay } from './utils'
 // Extend jsPDF with autoTable method
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF
+    autoTable: (options: {
+      head?: string[][]
+      body?: string[][]
+      startY?: number
+      styles?: {
+        fontSize?: number
+        cellPadding?: number
+      }
+      headStyles?: {
+        fillColor?: number[]
+        textColor?: number
+      }
+      alternateRowStyles?: {
+        fillColor?: number[]
+      }
+      columnStyles?: {
+        [key: number]: {
+          cellWidth?: number
+        }
+      }
+    }) => jsPDF
   }
 }
 
