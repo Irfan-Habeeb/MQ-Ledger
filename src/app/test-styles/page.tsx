@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 export default function TestStyles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -39,12 +41,12 @@ export default function TestStyles() {
         </div>
 
         <div className="mt-8 text-center">
-          <a 
+          <Link 
             href="/"
             className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             ← Back to Main App
-          </a>
+          </Link>
         </div>
       </div>
     </div>
