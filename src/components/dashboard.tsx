@@ -703,7 +703,7 @@ export function Dashboard() {
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-sm text-gray-600 font-medium bg-gray-100 px-3 py-1.5 rounded-full">
-                  Showing {currentEntries.length} of {filteredEntries.length} entries
+                  Showing {currentEntries.length} of {filteredEntries.length}
                 </div>
                 <Button
                   variant="outline"
