@@ -702,14 +702,14 @@ export function Dashboard() {
                 Recent Entries
               </div>
               <div className="flex items-center space-x-3">
-                <div className="text-sm text-gray-500 font-medium">
-                  {filteredEntries.length} of {entries.length} entries
+                <div className="text-sm text-gray-600 font-medium bg-gray-100 px-3 py-1.5 rounded-full">
+                  Showing {currentEntries.length} of {filteredEntries.length} entries
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setIsFilterDialogOpen(true)}
-                  className="flex items-center space-x-2"
+                  className="flex items-center space-x-2 border-gray-300 hover:bg-gray-50"
                 >
                   <Filter className="h-4 w-4" />
                   <span>Filter</span>
@@ -718,7 +718,7 @@ export function Dashboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => handleExportPDF(activeFilters)}
-                  className="flex items-center space-x-2 text-green-600 hover:text-green-700"
+                  className="flex items-center space-x-2 text-green-600 hover:text-green-700 border-green-300 hover:bg-green-50"
                 >
                   <Download className="h-4 w-4" />
                   <span>Export</span>
@@ -726,11 +726,11 @@ export function Dashboard() {
               </div>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
+          <CardContent className="p-6">
+            <div className="overflow-x-auto rounded-lg border border-gray-200">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b-2 border-gray-200">
+                  <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                     <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Date</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Description</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Type</th>
@@ -740,22 +740,33 @@ export function Dashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {currentEntries.map((entry) => (
-                    <tr key={entry.id} className="hover:bg-gray-50 transition-colors duration-200">
-                      <td className="py-4 px-6 text-gray-700 font-medium">{new Date(entry.date).toLocaleDateString()}</td>
-                      <td className="py-4 px-6 text-gray-900 font-medium max-w-xs truncate" title={entry.description}>
-                        {entry.description}
+                  {currentEntries.map((entry, index) => (
+                    <tr key={entry.id} className={`hover:bg-gray-50 transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                      <td className="py-4 px-6 text-gray-700 font-medium">
+                        <div className="flex flex-col">
+                          <span className="font-semibold">{new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</span>
+                          <span className="text-xs text-gray-500">{new Date(entry.date).getFullYear()}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-gray-900 font-medium max-w-xs">
+                        <div className="truncate" title={entry.description}>
+                          {entry.description}
+                        </div>
                       </td>
                       <td className="py-4 px-6">
                         <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
                           entry.type === 'Income' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
+                            ? 'bg-green-100 text-green-800 border border-green-200' 
+                            : 'bg-red-100 text-red-800 border border-red-200'
                         }`}>
                           {entry.type}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-gray-700 font-medium">{entry.category}</td>
+                      <td className="py-4 px-6 text-gray-700 font-medium">
+                        <span className="px-2 py-1 bg-gray-100 rounded-md text-sm">
+                          {entry.category}
+                        </span>
+                      </td>
                       <td className={`py-4 px-6 font-bold text-lg ${
                         entry.type === 'Income' ? 'text-green-600' : 'text-red-600'
                       }`}>

@@ -6,21 +6,23 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
+  // Use RS. instead of ₹ for better compatibility
+  const formatted = new Intl.NumberFormat('en-IN', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(amount)
+  }).format(Math.abs(amount))
+  
+  return `RS. ${formatted}`
 }
 
 export function formatCurrencyForDisplay(amount: number): string {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
+  // Use RS. instead of ₹ for better compatibility
+  const formatted = new Intl.NumberFormat('en-IN', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amount)
+  }).format(Math.abs(amount))
+  
+  return `RS. ${formatted}`
 }
 
 export function getLast12Months() {
