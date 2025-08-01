@@ -7,6 +7,10 @@ export interface User {
   avatar_url?: string
 }
 
+interface UnauthorizedError extends Error {
+  email?: string
+}
+
 // Authorized users for shared accounting access
 export const AUTHORIZED_USERS = [
   'mentorscue@gmail.com',
@@ -62,8 +66,8 @@ export const getCurrentUser = async (): Promise<User | null> => {
       if (!isUserAuthorized(user.email!)) {
         // Sign out unauthorized user
         await supabaseClient.auth.signOut()
-        const unauthorizedError = new Error('UNAUTHORIZED_USER')
-        ;(unauthorizedError as any).email = user.email
+        const unauthorizedError = new Error('UNAUTHORIZED_USER') as UnauthorizedError
+        unauthorizedError.email = user.email
         throw unauthorizedError
       }
       
