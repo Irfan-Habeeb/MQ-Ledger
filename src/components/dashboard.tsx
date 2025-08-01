@@ -61,15 +61,42 @@ export function Dashboard() {
 
   // Summary calculations - memoized for performance
   const totals = useMemo(() => calculatePeriodTotals(entries), [entries])
-  const currentMonth = new Date().getMonth()
-  const currentYear = new Date().getFullYear()
-  const currentMonthEntries = useMemo(() => 
-    entries.filter(entry => {
+  const currentMonthEntries = useMemo(() => {
+    const currentMonth = new Date().getMonth()
+    const currentYear = new Date().getFullYear()
+    return entries.filter(entry => {
       const entryDate = new Date(entry.date)
       return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear
-    }), [entries, currentMonth, currentYear]
-  )
+    })
+  }, [entries])
   const currentMonthTotals = useMemo(() => calculatePeriodTotals(currentMonthEntries), [currentMonthEntries])
+
+  // Helper function to filter entries
+  const getFilteredEntries = (entries: AccountingEntry[], filters: FilterOptions): AccountingEntry[] => {
+    return entries.filter(entry => {
+      // Date range filter
+      if (filters.dateRange !== 'all') {
+        const entryDate = new Date(entry.date)
+        const startDate = filters.startDate ? new Date(filters.startDate) : null
+        const endDate = filters.endDate ? new Date(filters.endDate) : null
+        
+        if (startDate && entryDate < startDate) return false
+        if (endDate && entryDate > endDate) return false
+      }
+      
+      // Type filter
+      if (filters.type && filters.type !== 'All' && entry.type !== filters.type) {
+        return false
+      }
+      
+      // Category filter
+      if (filters.category && entry.category !== filters.category) {
+        return false
+      }
+      
+      return true
+    })
+  }
 
   const calculateChartData = useCallback(() => {
     const months = getLast12Months()
@@ -306,33 +333,6 @@ export function Dashboard() {
   const startIndex = useMemo(() => (currentPage - 1) * itemsPerPage, [currentPage, itemsPerPage])
   const endIndex = useMemo(() => startIndex + itemsPerPage, [startIndex, itemsPerPage])
   const currentEntries = useMemo(() => filteredEntries.slice(startIndex, endIndex), [filteredEntries, startIndex, endIndex])
-
-  // Helper function to filter entries
-  const getFilteredEntries = (entries: AccountingEntry[], filters: FilterOptions): AccountingEntry[] => {
-    return entries.filter(entry => {
-      // Date range filter
-      if (filters.dateRange !== 'all') {
-        const entryDate = new Date(entry.date)
-        const startDate = filters.startDate ? new Date(filters.startDate) : null
-        const endDate = filters.endDate ? new Date(filters.endDate) : null
-        
-        if (startDate && entryDate < startDate) return false
-        if (endDate && entryDate > endDate) return false
-      }
-      
-      // Type filter
-      if (filters.type && filters.type !== 'All' && entry.type !== filters.type) {
-        return false
-      }
-      
-      // Category filter
-      if (filters.category && entry.category !== filters.category) {
-        return false
-      }
-      
-      return true
-    })
-  }
 
   const toggleTrendDataset = (dataset: 'income' | 'expenses' | 'balance') => {
     setVisibleTrendDatasets(prev => 
