@@ -105,7 +105,7 @@ export function Dashboard() {
         .order('date', { ascending: false })
 
       if (error) throw error
-      setEntries(data || [])
+      setEntries((data as AccountingEntry[]) || [])
     } catch (error) {
       console.error('Error loading entries:', error)
     } finally {
