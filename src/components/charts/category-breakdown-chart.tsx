@@ -1,21 +1,10 @@
 'use client'
 
 import React from 'react'
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 import { CategoryData } from '@/types'
 import { getCategoryColor } from '@/lib/utils'
-
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend
-)
+import '@/lib/chart-config'
 
 interface CategoryBreakdownChartProps {
   data: CategoryData
