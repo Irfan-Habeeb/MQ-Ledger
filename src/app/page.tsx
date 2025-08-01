@@ -28,10 +28,14 @@ export default function Home() {
         if (error instanceof Error && error.message === 'UNAUTHORIZED_USER') {
           setError('UNAUTHORIZED_USER')
           setUnauthorizedEmail((error as { email?: string }).email || 'Unknown email')
+        } else if (error instanceof Error && error.message.includes('Auth session missing')) {
+          // This is normal when no user is signed in
+          setIsAuthenticated(false)
+          setError(null)
         } else {
           setError('Failed to check authentication')
+          setIsAuthenticated(false)
         }
-        setIsAuthenticated(false)
       } finally {
         setIsLoading(false)
       }

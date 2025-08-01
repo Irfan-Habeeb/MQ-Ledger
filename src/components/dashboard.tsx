@@ -159,8 +159,14 @@ export function Dashboard() {
       }
     } catch (error) {
       console.error('Error checking user:', error)
-      setIsAuthenticated(false)
-      setUser(null)
+      // Handle session errors gracefully
+      if (error instanceof Error && error.message.includes('Auth session missing')) {
+        setIsAuthenticated(false)
+        setUser(null)
+      } else {
+        setIsAuthenticated(false)
+        setUser(null)
+      }
     }
   }
 
