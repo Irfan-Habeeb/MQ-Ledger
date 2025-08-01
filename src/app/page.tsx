@@ -63,6 +63,41 @@ export default function Home() {
     )
   }
 
+  // Debug section - remove this after we fix the styling
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-4xl font-bold text-blue-600 mb-8">Debug: Authentication Required</h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Tailwind Test</h2>
+              <div className="space-y-2">
+                <div className="bg-blue-600 text-white p-3 rounded">Blue 600</div>
+                <div className="bg-green-600 text-white p-3 rounded">Green 600</div>
+                <div className="bg-red-600 text-white p-3 rounded">Red 600</div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">CSS Variables Test</h2>
+              <div className="space-y-2">
+                <div className="bg-background text-foreground p-3 rounded border">Background</div>
+                <div className="bg-card text-card-foreground p-3 rounded border">Card</div>
+                <div className="bg-primary text-primary-foreground p-3 rounded">Primary</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Login />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (!isAuthenticated) {
     return <Login />
   }
