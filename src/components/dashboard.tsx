@@ -245,19 +245,33 @@ export function Dashboard() {
     }
 
     try {
+      // Validate required fields
+      if (!formData.description.trim()) {
+        alert('Please enter a description')
+        return
+      }
+      
+      if (!formData.category) {
+        alert('Please select a category')
+        return
+      }
+
       const supabaseClient = getSupabaseClient()
       const { error } = await supabaseClient
         .from('accounting_entries')
         .insert({
           date: formData.date,
-          description: formData.description,
+          description: formData.description.trim(),
           type: formData.type,
           category: formData.category,
           amount: amount,
           created_by: user.email
         })
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase error:', error)
+        throw error
+      }
 
       // Reset form
       setFormData({
@@ -272,7 +286,7 @@ export function Dashboard() {
       loadEntries()
     } catch (error) {
       console.error('Error adding entry:', error)
-      alert('Error adding entry')
+      alert(`Error adding entry: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
