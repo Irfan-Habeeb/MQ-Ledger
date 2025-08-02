@@ -726,7 +726,7 @@ export function Dashboard() {
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     required
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11 w-full md:w-48 lg:w-64"
+                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11 w-full md:w-48 lg:w-auto"
                   />
                   <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 h-11">
                     Add
