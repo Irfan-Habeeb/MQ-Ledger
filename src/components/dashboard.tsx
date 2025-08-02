@@ -454,10 +454,10 @@ export function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-6">
-              <div className="text-2xl font-bold" style={{ fontFamily: 'var(--font-montserrat), system-ui, sans-serif' }}>
+              <a href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity" style={{ fontFamily: 'var(--font-montserrat), system-ui, sans-serif' }}>
                 <span style={{ color: '#344e80' }}>MENTORS</span>
                 <span style={{ color: '#43a24c' }}>CUE</span>
-              </div>
+              </a>
               <div className="hidden lg:block h-8 w-px bg-gray-300"></div>
               <h1 className="hidden md:block text-xl font-semibold text-gray-900">Financial Dashboard</h1>
             </div>
@@ -470,9 +470,14 @@ export function Dashboard() {
                 <RefreshCw className="h-4 w-4 mr-2" />
                 <span className="hidden md:inline">Refresh</span>
               </Button>
-              <Button variant="outline" size="sm" onClick={handleSignOut}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleSignOut}
+                className="bg-white/90 backdrop-blur-sm border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm"
+              >
                 <LogOut className="h-4 w-4 mr-2" />
-                <span className="hidden md:inline">Sign Out</span>
+                <span className="hidden md:inline font-medium">Sign Out</span>
               </Button>
             </div>
           </div>

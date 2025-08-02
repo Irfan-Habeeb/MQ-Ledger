@@ -29,7 +29,7 @@ export function Login() {
       <div className="w-full max-w-sm text-center">
         {/* Logo */}
         <div className="mb-12">
-          <div className="text-5xl font-bold" style={{ fontFamily: 'var(--font-montserrat), system-ui, sans-serif' }}>
+          <div className="text-4xl font-bold" style={{ fontFamily: 'var(--font-montserrat), system-ui, sans-serif' }}>
             <span style={{ color: '#344e80' }}>MENTORS</span>
             <span style={{ color: '#43a24c' }}>CUE</span>
           </div>
