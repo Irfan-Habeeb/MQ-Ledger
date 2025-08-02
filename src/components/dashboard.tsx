@@ -15,7 +15,7 @@ import { formatCurrency, formatCurrencyForDisplay, formatBalanceForDisplay, getL
 import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
-import { CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target, Filter, Download } from 'lucide-react'
+import { CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target, Filter, Download, AlertTriangle } from 'lucide-react'
 import { Pagination } from '@/components/ui/pagination'
 import { FilterDialog, FilterOptions } from '@/components/ui/filter-dialog'
 import { exportToPDF } from '@/lib/pdf-export'
@@ -59,6 +59,10 @@ export function Dashboard() {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [entryToDelete, setEntryToDelete] = useState<AccountingEntry | null>(null)
+  const [showDataFlushModal, setShowDataFlushModal] = useState(false)
+  const [flushType, setFlushType] = useState<'6months' | '1year' | 'custom' | null>(null)
+  const [customDate, setCustomDate] = useState('')
+  const [entriesToFlush, setEntriesToFlush] = useState<AccountingEntry[]>([])
   const [successEntry, setSuccessEntry] = useState<{
     description: string
     type: string
@@ -371,6 +375,66 @@ export function Dashboard() {
   const confirmDelete = (entry: AccountingEntry) => {
     setEntryToDelete(entry)
     setShowDeleteModal(true)
+  }
+
+  const calculateFlushDate = (type: '6months' | '1year' | 'custom'): Date => {
+    const now = new Date()
+    switch (type) {
+      case '6months':
+        return new Date(now.getFullYear(), now.getMonth() - 6, 1)
+      case '1year':
+        return new Date(now.getFullYear() - 1, now.getMonth(), 1)
+      case 'custom':
+        return new Date(customDate)
+      default:
+        return new Date()
+    }
+  }
+
+  const getEntriesToFlush = (type: '6months' | '1year' | 'custom'): AccountingEntry[] => {
+    const flushDate = calculateFlushDate(type)
+    return entries.filter(entry => new Date(entry.date) < flushDate)
+  }
+
+  const handleDataFlush = async () => {
+    if (!user || !flushType) return
+
+    try {
+      const supabaseClient = getSupabaseClient()
+      const flushDate = calculateFlushDate(flushType)
+      
+      // Delete entries from database
+      const { error } = await supabaseClient
+        .from('accounting_entries')
+        .delete()
+        .lt('date', flushDate.toISOString().split('T')[0])
+
+      if (error) {
+        console.error('Error flushing data:', error)
+        alert('Error flushing data')
+        return
+      }
+
+      // Refresh entries
+      await loadEntries()
+      setShowDataFlushModal(false)
+      setFlushType(null)
+      setCustomDate('')
+      setEntriesToFlush([])
+      
+      // Show success message
+      alert(`Successfully deleted ${entriesToFlush.length} entries older than ${flushDate.toLocaleDateString('en-IN')}`)
+    } catch (error) {
+      console.error('Error flushing data:', error)
+      alert('Error flushing data')
+    }
+  }
+
+  const previewFlush = (type: '6months' | '1year' | 'custom') => {
+    setFlushType(type)
+    const entriesToDelete = getEntriesToFlush(type)
+    setEntriesToFlush(entriesToDelete)
+    setShowDataFlushModal(true)
   }
 
   const handlePageChange = (page: number) => {
@@ -817,6 +881,87 @@ export function Dashboard() {
           </Card>
         </div>
 
+        {/* Danger Zone - Data Flush */}
+        <Card className="bg-white shadow-lg border-red-200">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between text-red-700">
+              <div className="flex items-center">
+                <div className="p-2 bg-red-100 rounded-lg mr-3">
+                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                </div>
+                Danger Zone - Data Management
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="flex items-start space-x-3">
+                <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="text-sm font-semibold text-red-800 mb-2">⚠️ Data Flush Warning</h3>
+                  <p className="text-sm text-red-700 mb-3">
+                    This feature allows you to permanently delete old accounting entries. This action cannot be undone and will remove data from the database.
+                  </p>
+                  <div className="text-xs text-red-600 bg-red-100 p-2 rounded">
+                    <strong>Safety Note:</strong> Consider exporting your data before using this feature.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Delete 6+ Months Old</h4>
+                <p className="text-sm text-gray-600 mb-3">Remove entries older than 6 months</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => previewFlush('6months')}
+                  className="w-full text-orange-600 hover:text-orange-700 border-orange-300 hover:bg-orange-50"
+                >
+                  Preview & Delete
+                </Button>
+              </div>
+
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Delete 1+ Year Old</h4>
+                <p className="text-sm text-gray-600 mb-3">Remove entries older than 1 year</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => previewFlush('1year')}
+                  className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                >
+                  Preview & Delete
+                </Button>
+              </div>
+
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Custom Date Range</h4>
+                <p className="text-sm text-gray-600 mb-3">Delete entries before a specific date</p>
+                <div className="space-y-2">
+                  <input
+                    type="date"
+                    value={customDate}
+                    onChange={(e) => setCustomDate(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="Select date"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => previewFlush('custom')}
+                    disabled={!customDate}
+                    className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Preview & Delete
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Entries Table */}
         <Card className="bg-white shadow-lg border-gray-200" data-table-section>
           <CardHeader>
@@ -1113,6 +1258,102 @@ export function Dashboard() {
               className="bg-red-600 hover:bg-red-700 text-white"
             >
               Delete Permanently
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Data Flush Confirmation Modal */}
+      <Dialog open={showDataFlushModal} onOpenChange={setShowDataFlushModal}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <span className="text-lg font-semibold text-gray-900">Confirm Bulk Data Deletion</span>
+            </DialogTitle>
+          </DialogHeader>
+          
+          {flushType && (
+            <div className="space-y-4">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-red-800 mb-3">🚨 CRITICAL WARNING: This action cannot be undone</h3>
+                <p className="text-sm text-red-700 mb-4">
+                  You are about to permanently delete {entriesToFlush.length} entries from the database. This action cannot be reversed and will permanently remove data.
+                </p>
+                
+                <div className="bg-white rounded-lg p-4 border border-red-100">
+                  <h4 className="text-sm font-medium text-gray-900 mb-3">Deletion Summary:</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Entries to delete:</span>
+                      <span className="font-bold text-red-600">{entriesToFlush.length} entries</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Delete entries before:</span>
+                      <span className="font-medium text-gray-900">
+                        {calculateFlushDate(flushType).toLocaleDateString('en-IN', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Total value to delete:</span>
+                      <span className="font-bold text-gray-900">
+                        {formatCurrency(entriesToFlush.reduce((sum, entry) => sum + Math.abs(entry.amount), 0))}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {entriesToFlush.length > 0 && (
+                  <div className="bg-gray-50 rounded-lg p-3 mt-4">
+                    <h5 className="text-xs font-medium text-gray-700 mb-2">Sample entries to be deleted:</h5>
+                    <div className="space-y-1 max-h-32 overflow-y-auto">
+                      {entriesToFlush.slice(0, 5).map((entry, index) => (
+                        <div key={index} className="text-xs text-gray-600 flex justify-between items-center">
+                          <span className="truncate">{entry.description}</span>
+                          <span className={`font-medium ${
+                            entry.type === 'Income' ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                            {formatCurrency(entry.amount)}
+                          </span>
+                        </div>
+                      ))}
+                      {entriesToFlush.length > 5 && (
+                        <div className="text-xs text-gray-500 italic">
+                          ... and {entriesToFlush.length - 5} more entries
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          <div className="flex justify-end space-x-3 pt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setShowDataFlushModal(false)
+                setFlushType(null)
+                setCustomDate('')
+                setEntriesToFlush([])
+              }}
+              className="text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleDataFlush}
+              disabled={entriesToFlush.length === 0}
+              className="bg-red-600 hover:bg-red-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Delete {entriesToFlush.length} Entries Permanently
             </Button>
           </div>
         </DialogContent>
