@@ -340,8 +340,7 @@ export function Dashboard() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    // Scroll to top of table
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    // Don't scroll to top - stay at current position
   }
 
   // Filter and export functions
