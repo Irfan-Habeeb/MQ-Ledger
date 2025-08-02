@@ -72,17 +72,17 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   // Clean professional header
   const headerY = 30
   
-  // Logo with correct colors and proper spacing
+  // Logo as one cohesive word with proper spacing
   doc.setFontSize(28)
   doc.setTextColor(52, 78, 128) // #344e80
   doc.text('MENTORS', margin, headerY)
   doc.setTextColor(67, 162, 76) // #43a24c
-  doc.text('CUE', margin + 65, headerY) // Reduced spacing to match character spacing
+  doc.text('CUE', margin + 58, headerY) // Tighter spacing to make it one word
   
-  // Subtitle
+  // Subtitle with compact spacing
   doc.setFontSize(16)
   doc.setTextColor(75, 85, 99) // Gray-600
-  doc.text('Financial Records', margin, headerY + 12)
+  doc.text('Financial Records', margin, headerY + 8)
   
   // Report details on the right with closer spacing
   const currentDate = new Date().toLocaleDateString('en-IN', { 
@@ -99,8 +99,8 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   const filterText = getFilterDescription(filters)
   doc.text(`Period: ${filterText}`, pageWidth - margin, headerY + 8, { align: 'right' })
   
-  // Summary section with clean design
-  const summaryY = headerY + 35
+  // Summary section with clean design and compact spacing
+  const summaryY = headerY + 25
   const cardWidth = 55
   const cardHeight = 20
   const cardSpacing = 5
@@ -140,7 +140,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setFont('helvetica', 'normal')
   
   // Section divider
-  const dividerY = summaryY + cardHeight + 15
+  const dividerY = summaryY + cardHeight + 10
   doc.setDrawColor(229, 231, 235) // Gray-200
   doc.setLineWidth(0.5)
   doc.line(margin, dividerY, pageWidth - margin, dividerY)
@@ -148,7 +148,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   // Transaction details header
   doc.setFontSize(14)
   doc.setTextColor(31, 41, 55) // Gray-800
-  doc.text('Transaction Details', margin, dividerY + 15)
+  doc.text('Transaction Details', margin, dividerY + 12)
   
   // Prepare table data
   const tableHeaders = ['#', 'Date', 'Description', 'Type', 'Category', 'Amount']
@@ -161,8 +161,8 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
     formatCurrency(entry.amount)
   ])
   
-  // Smart table with professional styling
-  const tableY = dividerY + 25
+  // Smart table with professional styling and centered layout
+  const tableY = dividerY + 20
   
   if (entries.length > 0) {
     autoTable(doc, {
@@ -187,7 +187,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
               columnStyles: {
           0: { cellWidth: 15, halign: 'center' }, // #
           1: { cellWidth: 25, halign: 'center' }, // Date
-          2: { cellWidth: 50, halign: 'left' },   // Description
+          2: { cellWidth: 55, halign: 'left' },   // Description (wider for better centering)
           3: { cellWidth: 25, halign: 'center' }, // Type
           4: { cellWidth: 30, halign: 'left' },   // Category
           5: { cellWidth: 35, halign: 'right' }   // Amount
