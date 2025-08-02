@@ -78,7 +78,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(52, 78, 128) // #344e80
   doc.text('MENTORS', margin, headerY)
   doc.setTextColor(67, 162, 76) // #43a24c
-  doc.text('CUE', margin + 48, headerY) // Minimal spacing to make it truly one word
+  doc.text('CUE', margin + 43, headerY) // Reduced spacing by 5px
   
   // Subtitle with compact spacing
   doc.setFontSize(16)
@@ -191,7 +191,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
           0: { cellWidth: 25, halign: 'center' }, // Date
           1: { cellWidth: 60, halign: 'left' },   // Description (reduced space)
           2: { cellWidth: 25, halign: 'center' }, // Type
-          3: { cellWidth: 30, halign: 'left' },   // Category
+          3: { cellWidth: 35, halign: 'left' },   // Category (added 5px)
           4: { cellWidth: 35, halign: 'right' }   // Amount
         },
       alternateRowStyles: {
