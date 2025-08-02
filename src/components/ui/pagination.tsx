@@ -43,47 +43,49 @@ export function Pagination({ currentPage, totalPages, onPageChange, totalItems, 
   if (totalPages <= 1) return null
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
-      <div className="text-sm text-gray-700">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200 overflow-hidden">
+      <div className="text-sm text-gray-700 text-center sm:text-left">
         Showing {startItem} to {endItem} of {totalItems} entries
       </div>
       
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-1 sm:space-x-2 min-w-0">
         <Button
           variant="outline"
           size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 flex-shrink-0"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
         
-        {getVisiblePages().map((page, index) => (
-          <React.Fragment key={index}>
-            {page === '...' ? (
-              <div className="flex items-center justify-center w-8 h-8">
-                <MoreHorizontal className="h-4 w-4 text-gray-400" />
-              </div>
-            ) : (
-              <Button
-                variant={currentPage === page ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => onPageChange(page as number)}
-                className="h-8 w-8 p-0"
-              >
-                {page}
-              </Button>
-            )}
-          </React.Fragment>
-        ))}
+        <div className="flex items-center space-x-1 sm:space-x-2 overflow-hidden">
+          {getVisiblePages().map((page, index) => (
+            <React.Fragment key={index}>
+              {page === '...' ? (
+                <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
+                  <MoreHorizontal className="h-4 w-4 text-gray-400" />
+                </div>
+              ) : (
+                <Button
+                  variant={currentPage === page ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => onPageChange(page as number)}
+                  className="h-8 w-8 p-0 flex-shrink-0"
+                >
+                  {page}
+                </Button>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
         
         <Button
           variant="outline"
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 flex-shrink-0"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
