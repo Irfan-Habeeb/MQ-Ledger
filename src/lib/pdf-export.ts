@@ -78,7 +78,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(52, 78, 128) // #344e80
   doc.text('MENTORS', margin, headerY)
   doc.setTextColor(67, 162, 76) // #43a24c
-  doc.text('CUE', margin + 45, headerY) // Minimal spacing to make it one word
+  doc.text('CUE', margin + 62, headerY) // Proper spacing to make it readable as one word
   
   // Subtitle with compact spacing
   doc.setFontSize(16)
@@ -165,7 +165,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   
   // Smart table with professional styling and centered layout
   const tableY = dividerY + 20
-  const tableMargin = 10 // Smaller margins for better fit
+  const tableMargin = 15 // Professional margins
   
   if (entries.length > 0) {
     autoTable(doc, {
@@ -173,7 +173,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
       body: tableData,
       startY: tableY,
       margin: { top: 10, right: tableMargin, bottom: 20, left: tableMargin },
-      tableWidth: pageWidth - (tableMargin * 2), // Ensure table fits within smaller margins
+      tableWidth: pageWidth - (tableMargin * 2), // Ensure table fits within margins
       styles: {
         fontSize: 9,
         cellPadding: 6,
@@ -189,12 +189,12 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         fontSize: 10
       },
               columnStyles: {
-          0: { cellWidth: 12, halign: 'center' }, // #
-          1: { cellWidth: 22, halign: 'center' }, // Date
-          2: { cellWidth: 55, halign: 'left' },   // Description
-          3: { cellWidth: 22, halign: 'center' }, // Type
-          4: { cellWidth: 25, halign: 'left' },   // Category
-          5: { cellWidth: 30, halign: 'right' }   // Amount
+          0: { cellWidth: 15, halign: 'center' }, // #
+          1: { cellWidth: 25, halign: 'center' }, // Date
+          2: { cellWidth: 65, halign: 'left' },   // Description (more space)
+          3: { cellWidth: 25, halign: 'center' }, // Type
+          4: { cellWidth: 30, halign: 'left' },   // Category
+          5: { cellWidth: 35, halign: 'right' }   // Amount
         },
       alternateRowStyles: {
         fillColor: [249, 250, 251]
