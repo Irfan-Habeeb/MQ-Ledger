@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -454,10 +455,10 @@ export function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-6">
-              <a href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity" style={{ fontFamily: 'var(--font-montserrat), system-ui, sans-serif' }}>
+              <Link href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity" style={{ fontFamily: 'var(--font-montserrat), system-ui, sans-serif' }}>
                 <span style={{ color: '#344e80' }}>MENTORS</span>
                 <span style={{ color: '#43a24c' }}>CUE</span>
-              </a>
+              </Link>
               <div className="hidden lg:block h-8 w-px bg-gray-300"></div>
               <h1 className="hidden md:block text-xl font-semibold text-gray-900">Financial Dashboard</h1>
             </div>
