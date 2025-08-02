@@ -818,7 +818,7 @@ export function Dashboard() {
         </div>
 
         {/* Entries Table */}
-        <Card className="bg-white shadow-lg border-gray-200">
+        <Card className="bg-white shadow-lg border-gray-200" data-table-section>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center">
@@ -1009,7 +1009,19 @@ export function Dashboard() {
               Close
             </Button>
             <Button 
-              onClick={() => setShowSuccessModal(false)}
+              onClick={() => {
+                setShowSuccessModal(false)
+                // Scroll to the table after modal closes
+                setTimeout(() => {
+                  const tableElement = document.querySelector('[data-table-section]')
+                  if (tableElement) {
+                    tableElement.scrollIntoView({ 
+                      behavior: 'smooth', 
+                      block: 'start' 
+                    })
+                  }
+                }, 100)
+              }}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               View Entries
