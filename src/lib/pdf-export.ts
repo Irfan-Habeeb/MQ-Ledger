@@ -72,15 +72,17 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   // Clean professional header
   const headerY = 30
   
-  // Logo as one cohesive word with proper spacing
+  // Logo as one cohesive word with bold styling
   doc.setFontSize(28)
+  doc.setFont('helvetica', 'bold')
   doc.setTextColor(52, 78, 128) // #344e80
   doc.text('MENTORS', margin, headerY)
   doc.setTextColor(67, 162, 76) // #43a24c
-  doc.text('CUE', margin + 58, headerY) // Tighter spacing to make it one word
+  doc.text('CUE', margin + 52, headerY) // Even tighter spacing to make it one word
   
   // Subtitle with compact spacing
   doc.setFontSize(16)
+  doc.setFont('helvetica', 'normal')
   doc.setTextColor(75, 85, 99) // Gray-600
   doc.text('Financial Records', margin, headerY + 8)
   
@@ -150,7 +152,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(31, 41, 55) // Gray-800
   doc.text('Transaction Details', margin, dividerY + 12)
   
-  // Prepare table data
+  // Prepare table data with color coding
   const tableHeaders = ['#', 'Date', 'Description', 'Type', 'Category', 'Amount']
   const tableData = entries.map((entry, index) => [
     (index + 1).toString(),
@@ -186,12 +188,12 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         fontSize: 10
       },
               columnStyles: {
-          0: { cellWidth: 12, halign: 'center' }, // #
-          1: { cellWidth: 22, halign: 'center' }, // Date
-          2: { cellWidth: 50, halign: 'left' },   // Description
-          3: { cellWidth: 22, halign: 'center' }, // Type
-          4: { cellWidth: 25, halign: 'left' },   // Category
-          5: { cellWidth: 30, halign: 'right' }   // Amount
+          0: { cellWidth: 15, halign: 'center' }, // #
+          1: { cellWidth: 25, halign: 'center' }, // Date
+          2: { cellWidth: 60, halign: 'left' },   // Description (more breathing space)
+          3: { cellWidth: 25, halign: 'center' }, // Type
+          4: { cellWidth: 30, halign: 'left' },   // Category
+          5: { cellWidth: 35, halign: 'right' }   // Amount
         },
       alternateRowStyles: {
         fillColor: [249, 250, 251]
@@ -205,6 +207,17 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
           doc.setFontSize(8)
           doc.setTextColor(156, 163, 175)
           doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' })
+        },
+        didParseCell: function(data) {
+          // Color code amounts based on type
+          if (data.column.index === 5) { // Amount column
+            const entry = entries[data.row.index]
+            if (entry.type === 'Income') {
+              data.cell.styles.textColor = [21, 128, 61] // Dark green
+            } else {
+              data.cell.styles.textColor = [185, 28, 28] // Dark red
+            }
+          }
         }
     })
   } else {
