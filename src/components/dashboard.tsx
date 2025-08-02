@@ -57,7 +57,13 @@ export function Dashboard() {
     category: ''
   })
   const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [successEntry, setSuccessEntry] = useState<any>(null)
+  const [successEntry, setSuccessEntry] = useState<{
+    description: string
+    type: string
+    category: string
+    amount: string
+    date: string
+  } | null>(null)
 
   useEffect(() => {
     checkUser()
