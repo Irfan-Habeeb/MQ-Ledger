@@ -719,7 +719,7 @@ export function Dashboard() {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Amount</label>
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 md:space-x-4 lg:space-x-6">
                   <Input
                     type="number"
                     placeholder="0.00"
