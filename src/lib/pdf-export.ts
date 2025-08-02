@@ -99,7 +99,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   
   // Filter information with closer spacing and dynamic period display
   const periodText = getDynamicPeriodText(filters)
-  doc.text(`Period: ${periodText}`, pageWidth - margin, headerY + 8, { align: 'right' })
+  doc.text(`Period: ${periodText}`, pageWidth - margin, headerY + 5, { align: 'right' })
   
   // Summary section with clean design and compact spacing
   const summaryY = headerY + 25
@@ -244,6 +244,24 @@ const getDynamicPeriodText = (filters: { dateRange: string; startDate?: string; 
       const previousMonth = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1)
         .toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
       return `Month (${previousMonth})`
+    case 'last-30':
+      const endDate30 = new Date()
+      const startDate30 = new Date(endDate30.getTime() - (30 * 24 * 60 * 60 * 1000))
+      const start30 = startDate30.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })
+      const end30 = endDate30.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })
+      return `From ${start30} to ${end30}`
+    case 'last-60':
+      const endDate60 = new Date()
+      const startDate60 = new Date(endDate60.getTime() - (60 * 24 * 60 * 60 * 1000))
+      const start60 = startDate60.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })
+      const end60 = endDate60.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })
+      return `From ${start60} to ${end60}`
+    case 'last-90':
+      const endDate90 = new Date()
+      const startDate90 = new Date(endDate90.getTime() - (90 * 24 * 60 * 60 * 1000))
+      const start90 = startDate90.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })
+      const end90 = endDate90.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })
+      return `From ${start90} to ${end90}`
     case 'last-3-months':
       return 'Last 3 Months'
     case 'current-year':
