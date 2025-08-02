@@ -72,13 +72,13 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   // Clean professional header
   const headerY = 30
   
-  // Logo as one cohesive word with bold styling
+  // Logo as one single word with bold styling
   doc.setFontSize(28)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(52, 78, 128) // #344e80
   doc.text('MENTORS', margin, headerY)
   doc.setTextColor(67, 162, 76) // #43a24c
-  doc.text('CUE', margin + 62, headerY) // Proper spacing to make it readable as one word
+  doc.text('CUE', margin + 55, headerY) // Tighter spacing to make it one word
   
   // Subtitle with compact spacing
   doc.setFontSize(16)
@@ -152,10 +152,9 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(31, 41, 55) // Gray-800
   doc.text('Transaction Details', margin, dividerY + 12)
   
-  // Prepare table data with color coding
-  const tableHeaders = ['#', 'Date', 'Description', 'Type', 'Category', 'Amount']
-  const tableData = entries.map((entry, index) => [
-    (index + 1).toString(),
+  // Prepare table data with color coding (no # column)
+  const tableHeaders = ['Date', 'Description', 'Type', 'Category', 'Amount']
+  const tableData = entries.map((entry) => [
     new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' }),
     entry.description.length > 40 ? entry.description.substring(0, 40) + '...' : entry.description,
     entry.type,
@@ -189,12 +188,11 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         fontSize: 10
       },
               columnStyles: {
-          0: { cellWidth: 15, halign: 'center' }, // #
-          1: { cellWidth: 25, halign: 'center' }, // Date
-          2: { cellWidth: 65, halign: 'left' },   // Description (more space)
-          3: { cellWidth: 25, halign: 'center' }, // Type
-          4: { cellWidth: 30, halign: 'left' },   // Category
-          5: { cellWidth: 35, halign: 'right' }   // Amount
+          0: { cellWidth: 25, halign: 'center' }, // Date
+          1: { cellWidth: 70, halign: 'left' },   // Description (more space)
+          2: { cellWidth: 25, halign: 'center' }, // Type
+          3: { cellWidth: 30, halign: 'left' },   // Category
+          4: { cellWidth: 35, halign: 'right' }   // Amount
         },
       alternateRowStyles: {
         fillColor: [249, 250, 251]
@@ -211,7 +209,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         },
         didParseCell: function(data) {
           // Color code amounts based on type
-          if (data.column.index === 5) { // Amount column
+          if (data.column.index === 4) { // Amount column (now index 4 since we removed #)
             const entry = entries[data.row.index]
             if (entry.type === 'Income') {
               data.cell.styles.textColor = [21, 128, 61] // Dark green
@@ -242,6 +240,10 @@ const getDynamicPeriodText = (filters: { dateRange: string; startDate?: string; 
       const lastMonth = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1)
         .toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
       return `Month (${lastMonth})`
+    case 'previous-month':
+      const previousMonth = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1)
+        .toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
+      return `Month (${previousMonth})`
     case 'last-3-months':
       return 'Last 3 Months'
     case 'current-year':
