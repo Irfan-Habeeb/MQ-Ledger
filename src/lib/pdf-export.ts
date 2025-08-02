@@ -95,9 +95,9 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(107, 114, 128) // Gray-500
   doc.text(`Generated: ${currentDate}`, pageWidth - margin, headerY - 2, { align: 'right' })
   
-  // Filter information with closer spacing
-  const filterText = getFilterDescription(filters)
-  doc.text(`Period: ${filterText}`, pageWidth - margin, headerY + 8, { align: 'right' })
+  // Filter information with closer spacing and dynamic period display
+  const periodText = getDynamicPeriodText(filters)
+  doc.text(`Period: ${periodText}`, pageWidth - margin, headerY + 8, { align: 'right' })
   
   // Summary section with clean design and compact spacing
   const summaryY = headerY + 25
@@ -170,6 +170,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
       body: tableData,
       startY: tableY,
       margin: { top: 10, right: margin, bottom: 20, left: margin },
+      tableWidth: pageWidth - (margin * 2), // Ensure table fits within margins
       styles: {
         fontSize: 9,
         cellPadding: 6,
@@ -185,12 +186,12 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         fontSize: 10
       },
               columnStyles: {
-          0: { cellWidth: 15, halign: 'center' }, // #
-          1: { cellWidth: 25, halign: 'center' }, // Date
-          2: { cellWidth: 55, halign: 'left' },   // Description (wider for better centering)
-          3: { cellWidth: 25, halign: 'center' }, // Type
-          4: { cellWidth: 30, halign: 'left' },   // Category
-          5: { cellWidth: 35, halign: 'right' }   // Amount
+          0: { cellWidth: 12, halign: 'center' }, // #
+          1: { cellWidth: 22, halign: 'center' }, // Date
+          2: { cellWidth: 50, halign: 'left' },   // Description
+          3: { cellWidth: 22, halign: 'center' }, // Type
+          4: { cellWidth: 25, halign: 'left' },   // Category
+          5: { cellWidth: 30, halign: 'right' }   // Amount
         },
       alternateRowStyles: {
         fillColor: [249, 250, 251]
@@ -216,6 +217,31 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   // Generate filename with date
   const fileName = `MENTORSCUE-Financial-Records-${new Date().toISOString().split('T')[0]}.pdf`
   doc.save(fileName)
+}
+
+const getDynamicPeriodText = (filters: { dateRange: string; startDate?: string; endDate?: string; type?: string; category?: string }): string => {
+  switch (filters.dateRange) {
+    case 'current-month':
+      const currentMonth = new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
+      return `Month (${currentMonth})`
+    case 'last-month':
+      const lastMonth = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1)
+        .toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
+      return `Month (${lastMonth})`
+    case 'last-3-months':
+      return 'Last 3 Months'
+    case 'current-year':
+      return `Year (${new Date().getFullYear()})`
+    case 'custom':
+      if (filters.startDate && filters.endDate) {
+        const start = new Date(filters.startDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })
+        const end = new Date(filters.endDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })
+        return `From ${start} to ${end}`
+      }
+      return 'Custom Range'
+    default:
+      return 'All Time'
+  }
 }
 
 const getFilterDescription = (filters: { dateRange: string; startDate?: string; endDate?: string; type?: string; category?: string }): string => {
