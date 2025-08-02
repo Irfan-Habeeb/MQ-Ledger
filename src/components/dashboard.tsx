@@ -63,6 +63,7 @@ export function Dashboard() {
   const [flushType, setFlushType] = useState<'6months' | '1year' | 'custom' | null>(null)
   const [customDate, setCustomDate] = useState('')
   const [entriesToFlush, setEntriesToFlush] = useState<AccountingEntry[]>([])
+  const [showDangerZone, setShowDangerZone] = useState(false)
   const [successEntry, setSuccessEntry] = useState<{
     description: string
     type: string
@@ -881,86 +882,7 @@ export function Dashboard() {
           </Card>
         </div>
 
-        {/* Danger Zone - Data Flush */}
-        <Card className="bg-white shadow-lg border-red-200">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between text-red-700">
-              <div className="flex items-center">
-                <div className="p-2 bg-red-100 rounded-lg mr-3">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
-                </div>
-                Danger Zone - Data Management
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <div className="flex items-start space-x-3">
-                <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="text-sm font-semibold text-red-800 mb-2">⚠️ Data Flush Warning</h3>
-                  <p className="text-sm text-red-700 mb-3">
-                    This feature allows you to permanently delete old accounting entries. This action cannot be undone and will remove data from the database.
-                  </p>
-                  <div className="text-xs text-red-600 bg-red-100 p-2 rounded">
-                    <strong>Safety Note:</strong> Consider exporting your data before using this feature.
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-2">Delete 6+ Months Old</h4>
-                <p className="text-sm text-gray-600 mb-3">Remove entries older than 6 months</p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => previewFlush('6months')}
-                  className="w-full text-orange-600 hover:text-orange-700 border-orange-300 hover:bg-orange-50"
-                >
-                  Preview & Delete
-                </Button>
-              </div>
-
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-2">Delete 1+ Year Old</h4>
-                <p className="text-sm text-gray-600 mb-3">Remove entries older than 1 year</p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => previewFlush('1year')}
-                  className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
-                >
-                  Preview & Delete
-                </Button>
-              </div>
-
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-2">Custom Date Range</h4>
-                <p className="text-sm text-gray-600 mb-3">Delete entries before a specific date</p>
-                <div className="space-y-2">
-                  <input
-                    type="date"
-                    value={customDate}
-                    onChange={(e) => setCustomDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    placeholder="Select date"
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => previewFlush('custom')}
-                    disabled={!customDate}
-                    className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Preview & Delete
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Entries Table */}
         <Card className="bg-white shadow-lg border-gray-200" data-table-section>
@@ -1073,6 +995,102 @@ export function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Danger Zone - Data Flush (Only for mentorscue@gmail.com) */}
+      {user?.email === 'mentorscue@gmail.com' && (
+        <div className="mt-8">
+          <Card className="bg-white shadow-lg border-red-200">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between text-red-700">
+                <div className="flex items-center">
+                  <div className="p-2 bg-red-100 rounded-lg mr-3">
+                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                  </div>
+                  Danger Zone - Data Management
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowDangerZone(!showDangerZone)}
+                  className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                >
+                  {showDangerZone ? 'Hide' : 'Show'} Danger Zone
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            
+            {showDangerZone && (
+              <CardContent className="p-6 border-t border-red-200">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                  <div className="flex items-start space-x-3">
+                    <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h3 className="text-sm font-semibold text-red-800 mb-2">⚠️ Data Flush Warning</h3>
+                      <p className="text-sm text-red-700 mb-3">
+                        This feature allows you to permanently delete old accounting entries. This action cannot be undone and will remove data from the database.
+                      </p>
+                      <div className="text-xs text-red-600 bg-red-100 p-2 rounded">
+                        <strong>Safety Note:</strong> Consider exporting your data before using this feature.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">Delete 6+ Months Old</h4>
+                    <p className="text-sm text-gray-600 mb-3">Remove entries older than 6 months</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => previewFlush('6months')}
+                      className="w-full text-orange-600 hover:text-orange-700 border-orange-300 hover:bg-orange-50"
+                    >
+                      Preview & Delete
+                    </Button>
+                  </div>
+
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">Delete 1+ Year Old</h4>
+                    <p className="text-sm text-gray-600 mb-3">Remove entries older than 1 year</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => previewFlush('1year')}
+                      className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                    >
+                      Preview & Delete
+                    </Button>
+                  </div>
+
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">Custom Date Range</h4>
+                    <p className="text-sm text-gray-600 mb-3">Delete entries before a specific date</p>
+                    <div className="space-y-2">
+                      <input
+                        type="date"
+                        value={customDate}
+                        onChange={(e) => setCustomDate(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                        placeholder="Select date"
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => previewFlush('custom')}
+                        disabled={!customDate}
+                        className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Preview & Delete
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            )}
+          </Card>
+        </div>
+      )}
 
       {/* Filter Dialog */}
       <FilterDialog
