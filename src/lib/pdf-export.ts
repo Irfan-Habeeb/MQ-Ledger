@@ -188,10 +188,10 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
         fontSize: 10
       },
               columnStyles: {
-          0: { cellWidth: 25, halign: 'center' }, // Date
-          1: { cellWidth: 60, halign: 'left' },   // Description (reduced space)
+          0: { cellWidth: 26, halign: 'center' }, // Date (added 1px)
+          1: { cellWidth: 59, halign: 'left' },   // Description (removed 1px)
           2: { cellWidth: 25, halign: 'center' }, // Type
-          3: { cellWidth: 35, halign: 'left' },   // Category (added 5px)
+          3: { cellWidth: 35, halign: 'left' },   // Category
           4: { cellWidth: 35, halign: 'right' }   // Amount
         },
       alternateRowStyles: {
