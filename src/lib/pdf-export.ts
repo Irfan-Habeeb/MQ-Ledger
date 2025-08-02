@@ -78,7 +78,7 @@ export const exportToPDF = ({ entries, filters, totals }: PDFExportOptions) => {
   doc.setTextColor(52, 78, 128) // #344e80
   doc.text('MENTORS', margin, headerY)
   doc.setTextColor(67, 162, 76) // #43a24c
-  doc.text('CUE', margin + 43, headerY) // Reduced 12px spacing between MENTORS and CUE
+  doc.text('CUE', margin + 47, headerY) // Added 4px spacing between MENTORS and CUE
   
   // Subtitle with compact spacing
   doc.setFontSize(16)
