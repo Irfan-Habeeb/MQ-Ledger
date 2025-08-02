@@ -25,6 +25,16 @@ export function formatCurrencyForDisplay(amount: number): string {
   return `RS. ${formatted}`
 }
 
+export function formatBalanceForDisplay(amount: number): string {
+  // For balance, show negative values with minus sign
+  const formatted = new Intl.NumberFormat('en-IN', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(Math.abs(amount))
+  
+  return amount < 0 ? `-RS. ${formatted}` : `RS. ${formatted}`
+}
+
 export function getLast12Months() {
   const months = []
   const now = new Date()

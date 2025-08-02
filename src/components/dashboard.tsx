@@ -10,7 +10,7 @@ import { MonthlyTrendsChart } from '@/components/charts/monthly-trends-chart'
 import { SavingsRateChart } from '@/components/charts/savings-rate-chart'
 import { ExpenseRatioChart } from '@/components/charts/expense-ratio-chart'
 import { CategoryBreakdownChart } from '@/components/charts/category-breakdown-chart'
-import { formatCurrency, formatCurrencyForDisplay, getLast12Months, calculatePeriodTotals } from '@/lib/utils'
+import { formatCurrency, formatCurrencyForDisplay, formatBalanceForDisplay, getLast12Months, calculatePeriodTotals } from '@/lib/utils'
 import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
@@ -521,7 +521,11 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg border-0 overflow-hidden hover:shadow-xl transition-all duration-300">
+          <Card className={`shadow-lg border-0 overflow-hidden hover:shadow-xl transition-all duration-300 ${
+            currentMonthTotals.balance >= 0 
+              ? 'bg-gradient-to-br from-green-500 to-green-600' 
+              : 'bg-gradient-to-br from-red-500 to-red-600'
+          }`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-white/90">Monthly Balance</CardTitle>
               <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
@@ -530,10 +534,10 @@ export function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {formatCurrencyForDisplay(currentMonthTotals.balance)}
+                {formatBalanceForDisplay(currentMonthTotals.balance)}
               </div>
               <p className="text-xs text-white/80 mt-1">
-                Total: {formatCurrencyForDisplay(totals.balance)}
+                Total: {formatBalanceForDisplay(totals.balance)}
               </p>
             </CardContent>
           </Card>
