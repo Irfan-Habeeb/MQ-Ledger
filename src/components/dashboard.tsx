@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { MonthlyTrendsChart } from '@/components/charts/monthly-trends-chart'
@@ -55,6 +56,8 @@ export function Dashboard() {
     type: 'All',
     category: ''
   })
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [successEntry, setSuccessEntry] = useState<any>(null)
 
   useEffect(() => {
     checkUser()
@@ -292,8 +295,19 @@ export function Dashboard() {
 
       console.log('Entry added successfully:', data)
 
-      // Show success message
-      alert('✅ Entry added successfully!')
+      // Show success modal with entry details
+      setSuccessEntry({
+        description: formData.description.trim(),
+        type: formData.type,
+        category: formData.category,
+        amount: formatCurrency(amount),
+        date: new Date(formData.date).toLocaleDateString('en-IN', { 
+          day: '2-digit', 
+          month: 'long', 
+          year: 'numeric' 
+        })
+      })
+      setShowSuccessModal(true)
 
       // Reset form
       setFormData({
@@ -903,6 +917,85 @@ export function Dashboard() {
         currentFilters={activeFilters}
         categories={categories}
       />
+
+      {/* Success Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span className="text-lg font-semibold text-gray-900">Entry Added Successfully!</span>
+            </DialogTitle>
+          </DialogHeader>
+          
+          {successEntry && (
+            <div className="space-y-4">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Entry Details</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Description:</span>
+                    <span className="text-sm font-medium text-gray-900">{successEntry.description}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Type:</span>
+                    <span className={`text-sm font-medium px-2 py-1 rounded-full ${
+                      successEntry.type === 'Income' 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {successEntry.type}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Category:</span>
+                    <span className="text-sm font-medium text-gray-900">{successEntry.category}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Amount:</span>
+                    <span className={`text-sm font-bold ${
+                      successEntry.type === 'Income' ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                      {successEntry.amount}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Date:</span>
+                    <span className="text-sm font-medium text-gray-900">{successEntry.date}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Your entry has been saved and is now visible in the table below.</span>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex justify-end space-x-3 pt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowSuccessModal(false)}
+              className="text-gray-700 hover:bg-gray-50"
+            >
+              Close
+            </Button>
+            <Button 
+              onClick={() => setShowSuccessModal(false)}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              View Entries
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
