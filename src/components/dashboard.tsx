@@ -64,6 +64,13 @@ export function Dashboard() {
   const [customDate, setCustomDate] = useState('')
   const [entriesToFlush, setEntriesToFlush] = useState<AccountingEntry[]>([])
   const [showDangerZone, setShowDangerZone] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [entryToEdit, setEntryToEdit] = useState<AccountingEntry | null>(null)
+  const [editFormData, setEditFormData] = useState({
+    description: '',
+    type: 'Expense' as 'Income' | 'Expense',
+    category: ''
+  })
   const [successEntry, setSuccessEntry] = useState<{
     description: string
     type: string
@@ -436,6 +443,50 @@ export function Dashboard() {
     const entriesToDelete = getEntriesToFlush(type)
     setEntriesToFlush(entriesToDelete)
     setShowDataFlushModal(true)
+  }
+
+  const handleEdit = (entry: AccountingEntry) => {
+    setEntryToEdit(entry)
+    setEditFormData({
+      description: entry.description,
+      type: entry.type,
+      category: entry.category
+    })
+    setShowEditModal(true)
+  }
+
+  const handleUpdateEntry = async () => {
+    if (!user || !entryToEdit) return
+
+    try {
+      const supabaseClient = getSupabaseClient()
+      
+      const { error } = await supabaseClient
+        .from('accounting_entries')
+        .update({
+          description: editFormData.description.trim(),
+          type: editFormData.type,
+          category: editFormData.category
+        })
+        .eq('id', entryToEdit.id)
+
+      if (error) {
+        console.error('Error updating entry:', error)
+        alert('Error updating entry')
+        return
+      }
+
+      // Refresh entries
+      await loadEntries()
+      setShowEditModal(false)
+      setEntryToEdit(null)
+      setEditFormData({ description: '', type: 'Expense', category: '' })
+      
+      alert('✅ Entry updated successfully!')
+    } catch (error) {
+      console.error('Error updating entry:', error)
+      alert('Error updating entry')
+    }
   }
 
   const handlePageChange = (page: number) => {
@@ -969,14 +1020,28 @@ export function Dashboard() {
                         </span>
                       </td>
                       <td className="py-4 px-6">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => confirmDelete(entry)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEdit(entry)}
+                            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200"
+                            title="Edit entry"
+                          >
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => confirmDelete(entry)}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                            title="Delete entry"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -1372,6 +1437,118 @@ export function Dashboard() {
               className="bg-red-600 hover:bg-red-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Delete {entriesToFlush.length} Entries Permanently
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Entry Modal */}
+      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <span className="text-lg font-semibold text-gray-900">Edit Entry</span>
+            </DialogTitle>
+          </DialogHeader>
+          
+          {entryToEdit && (
+            <div className="space-y-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h3 className="text-sm font-medium text-blue-800 mb-2">📝 Edit Entry Details</h3>
+                <p className="text-sm text-blue-700 mb-3">
+                  You can edit the description, type, and category. Date and amount cannot be modified.
+                </p>
+                
+                <div className="bg-white rounded-lg p-3 border border-blue-100">
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Current Entry:</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Date:</span>
+                      <span className="font-medium text-gray-900">
+                        {new Date(entryToEdit.date).toLocaleDateString('en-IN', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Amount:</span>
+                      <span className={`font-bold ${
+                        entryToEdit.type === 'Income' ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {formatCurrency(entryToEdit.amount)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Description</label>
+                  <Input
+                    placeholder="Enter description"
+                    value={editFormData.description}
+                    onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                    required
+                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Type</label>
+                  <Select value={editFormData.type} onValueChange={(value: 'Income' | 'Expense') => setEditFormData({ ...editFormData, type: value, category: '' })}>
+                    <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Income">Income</SelectItem>
+                      <SelectItem value="Expense">Expense</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Category</label>
+                  <Select value={editFormData.category} onValueChange={(value) => setEditFormData({ ...editFormData, category: value })}>
+                    <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {getCategoryOptions(editFormData.type).map(category => (
+                        <SelectItem key={category} value={category}>{category}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex justify-end space-x-3 pt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setShowEditModal(false)
+                setEntryToEdit(null)
+                setEditFormData({ description: '', type: 'Expense', category: '' })
+              }}
+              className="text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleUpdateEntry}
+              disabled={!editFormData.description.trim() || !editFormData.category}
+              className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Update Entry
             </Button>
           </div>
         </DialogContent>
