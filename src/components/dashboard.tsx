@@ -558,6 +558,8 @@ export function Dashboard() {
         'Consultation Fees',
         'Corporate Training',
         'Exam Preparation',
+        'Admission Fees',
+        'Registration Fees',
         'Other Income'
       ],
       Expense: [
@@ -569,6 +571,7 @@ export function Dashboard() {
         'Healthcare',
         'Education',
         'Teacher Salaries',
+        'Employee Salaries',
         'Platform Subscriptions',
         'Marketing & Ads',
         'Study Materials',
