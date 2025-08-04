@@ -1362,31 +1362,31 @@ export function Dashboard() {
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+              <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
-              <span className="text-lg font-semibold text-gray-900">Confirm Bulk Data Deletion</span>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">Confirm Bulk Data Deletion</span>
             </DialogTitle>
           </DialogHeader>
           
           {flushType && (
             <div className="space-y-4">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-red-800 mb-3">🚨 CRITICAL WARNING: This action cannot be undone</h3>
-                <p className="text-sm text-red-700 mb-4">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-red-800 dark:text-red-300 mb-3">🚨 CRITICAL WARNING: This action cannot be undone</h3>
+                <p className="text-sm text-red-700 dark:text-red-300 mb-4">
                   You are about to permanently delete {entriesToFlush.length} entries from the database. This action cannot be reversed and will permanently remove data.
                 </p>
                 
-                <div className="bg-white rounded-lg p-4 border border-red-100">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">Deletion Summary:</h4>
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-red-100 dark:border-red-800">
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Deletion Summary:</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Entries to delete:</span>
-                      <span className="font-bold text-red-600">{entriesToFlush.length} entries</span>
+                      <span className="text-gray-600 dark:text-gray-400">Entries to delete:</span>
+                      <span className="font-bold text-red-600 dark:text-red-400">{entriesToFlush.length} entries</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Delete entries before:</span>
-                      <span className="font-medium text-gray-900">
+                      <span className="text-gray-600 dark:text-gray-400">Delete entries before:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
                         {calculateFlushDate(flushType).toLocaleDateString('en-IN', {
                           day: '2-digit',
                           month: 'long',
@@ -1395,8 +1395,8 @@ export function Dashboard() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Total value to delete:</span>
-                      <span className="font-bold text-gray-900">
+                      <span className="text-gray-600 dark:text-gray-400">Total value to delete:</span>
+                      <span className="font-bold text-gray-900 dark:text-white">
                         {formatCurrency(entriesToFlush.reduce((sum, entry) => sum + Math.abs(entry.amount), 0))}
                       </span>
                     </div>
@@ -1404,21 +1404,21 @@ export function Dashboard() {
                 </div>
 
                 {entriesToFlush.length > 0 && (
-                  <div className="bg-gray-50 rounded-lg p-3 mt-4">
-                    <h5 className="text-xs font-medium text-gray-700 mb-2">Sample entries to be deleted:</h5>
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 mt-4">
+                    <h5 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Sample entries to be deleted:</h5>
                     <div className="space-y-1 max-h-32 overflow-y-auto">
                       {entriesToFlush.slice(0, 5).map((entry, index) => (
-                        <div key={index} className="text-xs text-gray-600 flex justify-between items-center">
+                        <div key={index} className="text-xs text-gray-600 dark:text-gray-400 flex justify-between items-center">
                           <span className="truncate">{entry.description}</span>
                           <span className={`font-medium ${
-                            entry.type === 'Income' ? 'text-green-600' : 'text-red-600'
+                            entry.type === 'Income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                           }`}>
                             {formatCurrency(entry.amount)}
                           </span>
                         </div>
                       ))}
                       {entriesToFlush.length > 5 && (
-                        <div className="text-xs text-gray-500 italic">
+                        <div className="text-xs text-gray-500 dark:text-gray-500 italic">
                           ... and {entriesToFlush.length - 5} more entries
                         </div>
                       )}
@@ -1438,7 +1438,7 @@ export function Dashboard() {
                 setCustomDate('')
                 setEntriesToFlush([])
               }}
-              className="text-gray-700 hover:bg-gray-50"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
             >
               Cancel
             </Button>
