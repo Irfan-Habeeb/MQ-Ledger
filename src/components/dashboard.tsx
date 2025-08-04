@@ -1458,29 +1458,29 @@ export function Dashboard() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
               </div>
-              <span className="text-lg font-semibold text-gray-900">Edit Entry</span>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">Edit Entry</span>
             </DialogTitle>
           </DialogHeader>
           
           {entryToEdit && (
             <div className="space-y-4">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                <h3 className="text-sm font-medium text-blue-800 mb-2">📝 Edit Entry Details</h3>
-                <p className="text-sm text-blue-700 mb-3">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                <h3 className="text-sm font-medium text-blue-800 dark:text-blue-300 mb-2">📝 Edit Entry Details</h3>
+                <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
                   You can edit the description, type, and category. Date and amount cannot be modified.
                 </p>
                 
-                <div className="bg-white rounded-lg p-3 border border-blue-100">
-                  <h4 className="text-sm font-medium text-gray-900 mb-2">Current Entry:</h4>
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-blue-100 dark:border-blue-800">
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Current Entry:</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Date:</span>
-                      <span className="font-medium text-gray-900">
+                      <span className="text-gray-600 dark:text-gray-400">Date:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
                         {new Date(entryToEdit.date).toLocaleDateString('en-IN', {
                           day: '2-digit',
                           month: 'long',
@@ -1489,9 +1489,9 @@ export function Dashboard() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Amount:</span>
+                      <span className="text-gray-600 dark:text-gray-400">Amount:</span>
                       <span className={`font-bold ${
-                        entryToEdit.type === 'Income' ? 'text-green-600' : 'text-red-600'
+                        entryToEdit.type === 'Income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}>
                         {formatCurrency(entryToEdit.amount)}
                       </span>
@@ -1502,38 +1502,38 @@ export function Dashboard() {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Description</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                   <Input
                     placeholder="Enter description"
                     value={editFormData.description}
                     onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
                     required
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Type</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
                   <Select value={editFormData.type} onValueChange={(value: 'Income' | 'Expense') => setEditFormData({ ...editFormData, type: value, category: '' })}>
-                    <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Income">Income</SelectItem>
-                      <SelectItem value="Expense">Expense</SelectItem>
+                    <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                      <SelectItem value="Income" className="text-gray-900 dark:text-white">Income</SelectItem>
+                      <SelectItem value="Expense" className="text-gray-900 dark:text-white">Expense</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Category</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
                   <Select value={editFormData.category} onValueChange={(value) => setEditFormData({ ...editFormData, category: value })}>
-                    <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                       {getCategoryOptions(editFormData.type).map(category => (
-                        <SelectItem key={category} value={category}>{category}</SelectItem>
+                        <SelectItem key={category} value={category} className="text-gray-900 dark:text-white">{category}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -1550,7 +1550,7 @@ export function Dashboard() {
                 setEntryToEdit(null)
                 setEditFormData({ description: '', type: 'Expense', category: '' })
               }}
-              className="text-gray-700 hover:bg-gray-50"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
             >
               Cancel
             </Button>

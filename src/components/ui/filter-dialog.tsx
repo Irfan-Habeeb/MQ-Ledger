@@ -114,32 +114,32 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md bg-white shadow-2xl">
+      <Card className="w-full max-w-md bg-white dark:bg-gray-800 shadow-2xl">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center text-gray-900 dark:text-white">
             <Filter className="h-5 w-5 mr-2" />
             Filter & Export
           </CardTitle>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
             <X className="h-4 w-4" />
           </Button>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Date Range Filter */}
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Date Range</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Date Range</label>
             <Select value={filters.dateRange || 'all'} onValueChange={handleDateRangeChange}>
-              <SelectTrigger>
+              <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                 <SelectValue placeholder="Select date range" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Time</SelectItem>
-                <SelectItem value="current-month">Current Month</SelectItem>
-                <SelectItem value="previous-month">Previous Month</SelectItem>
-                <SelectItem value="last-30">Last 30 Days</SelectItem>
-                <SelectItem value="last-60">Last 60 Days</SelectItem>
-                <SelectItem value="last-90">Last 90 Days</SelectItem>
-                <SelectItem value="custom">Custom Range</SelectItem>
+              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <SelectItem value="all" className="text-gray-900 dark:text-white">All Time</SelectItem>
+                <SelectItem value="current-month" className="text-gray-900 dark:text-white">Current Month</SelectItem>
+                <SelectItem value="previous-month" className="text-gray-900 dark:text-white">Previous Month</SelectItem>
+                <SelectItem value="last-30" className="text-gray-900 dark:text-white">Last 30 Days</SelectItem>
+                <SelectItem value="last-60" className="text-gray-900 dark:text-white">Last 60 Days</SelectItem>
+                <SelectItem value="last-90" className="text-gray-900 dark:text-white">Last 90 Days</SelectItem>
+                <SelectItem value="custom" className="text-gray-900 dark:text-white">Custom Range</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -148,19 +148,21 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
           {filters.dateRange === 'custom' && (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Start Date</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Start Date</label>
                 <Input
                   type="date"
                   value={filters.startDate || ''}
                   onChange={(e) => setFilters(prev => ({ ...prev, startDate: e.target.value }))}
+                  className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">End Date</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">End Date</label>
                 <Input
                   type="date"
                   value={filters.endDate || ''}
                   onChange={(e) => setFilters(prev => ({ ...prev, endDate: e.target.value }))}
+                  className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
             </div>
@@ -168,30 +170,30 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
 
           {/* Type Filter */}
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Type</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
             <Select value={filters.type || 'All'} onValueChange={(value: string) => setFilters(prev => ({ ...prev, type: value as 'Income' | 'Expense' | 'All' }))}>
-              <SelectTrigger>
+              <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All">All Types</SelectItem>
-                <SelectItem value="Income">Income Only</SelectItem>
-                <SelectItem value="Expense">Expense Only</SelectItem>
+              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <SelectItem value="All" className="text-gray-900 dark:text-white">All Types</SelectItem>
+                <SelectItem value="Income" className="text-gray-900 dark:text-white">Income Only</SelectItem>
+                <SelectItem value="Expense" className="text-gray-900 dark:text-white">Expense Only</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Category Filter */}
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Category</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
             <Select value={filters.category || 'all'} onValueChange={(value) => setFilters(prev => ({ ...prev, category: value === 'all' ? '' : value }))}>
-              <SelectTrigger>
+              <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
+              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <SelectItem value="all" className="text-gray-900 dark:text-white">All Categories</SelectItem>
                 {categories?.map(category => (
-                  <SelectItem key={category} value={category}>{category}</SelectItem>
+                  <SelectItem key={category} value={category} className="text-gray-900 dark:text-white">{category}</SelectItem>
                 )) || []}
               </SelectContent>
             </Select>
@@ -199,7 +201,7 @@ export function FilterDialog({ isOpen, onClose, onApply, onExport, currentFilter
 
           {/* Action Buttons */}
           <div className="flex space-x-3 pt-4">
-            <Button variant="outline" onClick={handleReset} className="flex-1">
+            <Button variant="outline" onClick={handleReset} className="flex-1 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
               Reset
             </Button>
             <Button onClick={handleApply} className="flex-1">
