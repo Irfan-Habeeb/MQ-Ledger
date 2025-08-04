@@ -603,9 +603,9 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#cedce7' }}>
+    <div className="min-h-screen bg-[#cedce7] dark:bg-gray-900">
       {/* Header */}
-      <header className="backdrop-blur-md bg-white/80 shadow-lg border-b border-gray-200/50 sticky top-0 z-50">
+      <header className="backdrop-blur-md bg-white/80 dark:bg-gray-800/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-6">
@@ -613,13 +613,13 @@ export function Dashboard() {
                 <span style={{ color: '#344e80' }}>MENTORS</span>
                 <span style={{ color: '#43a24c' }}>CUE</span>
               </Link>
-              <div className="hidden lg:block h-8 w-px bg-gray-300"></div>
-              <h1 className="hidden md:block text-xl font-semibold text-gray-900">Financial Dashboard</h1>
+              <div className="hidden lg:block h-8 w-px bg-gray-300 dark:bg-gray-600"></div>
+              <h1 className="hidden md:block text-xl font-semibold text-gray-900 dark:text-white">Financial Dashboard</h1>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gray-100/80 backdrop-blur-sm rounded-full">
-                <UserIcon className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-700 font-medium truncate max-w-32">{user.email}</span>
+              <div className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-full">
+                <UserIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                <span className="text-sm text-gray-700 dark:text-gray-300 font-medium truncate max-w-32">{user.email}</span>
               </div>
               <ThemeToggle />
               <Button variant="outline" size="sm" onClick={loadEntries} className="hidden sm:flex">
@@ -630,7 +630,7 @@ export function Dashboard() {
                 variant="outline" 
                 size="sm" 
                 onClick={handleSignOut}
-                className="bg-white/90 backdrop-blur-sm border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm"
+                className="bg-white/90 dark:bg-gray-700/90 backdrop-blur-sm border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 shadow-sm"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 <span className="hidden md:inline font-medium">Sign Out</span>
@@ -717,11 +717,11 @@ export function Dashboard() {
         </div>
 
         {/* Add Entry Form */}
-        <Card className="mb-8 bg-white shadow-lg border-gray-200">
+        <Card className="mb-8 bg-white dark:bg-gray-800 shadow-lg border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="flex items-center text-lg">
-              <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                <Plus className="h-5 w-5 text-blue-600" />
+            <CardTitle className="flex items-center text-lg text-gray-900 dark:text-white">
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
+                <Plus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               Add New Entry
             </CardTitle>
@@ -729,52 +729,52 @@ export function Dashboard() {
           <CardContent>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Date</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
                 <Input
                   type="date"
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   required
-                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11"
+                  className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 h-11 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-sm font-medium text-gray-700">Description</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                 <Input
                   placeholder="Enter description"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   required
-                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11"
+                  className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 h-11 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Type</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
                 <Select value={formData.type} onValueChange={(value: 'Income' | 'Expense') => setFormData({ ...formData, type: value, category: '' })}>
-                  <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11">
+                  <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 h-11 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Income">Income</SelectItem>
-                    <SelectItem value="Expense">Expense</SelectItem>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                    <SelectItem value="Income" className="text-gray-900 dark:text-white">Income</SelectItem>
+                    <SelectItem value="Expense" className="text-gray-900 dark:text-white">Expense</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Category</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
                 <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                  <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11">
+                  <SelectTrigger className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 h-11 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                     {getCategoryOptions(formData.type).map(category => (
-                      <SelectItem key={category} value={category}>{category}</SelectItem>
+                      <SelectItem key={category} value={category} className="text-gray-900 dark:text-white">{category}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Amount</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Amount</label>
                 <div className="flex space-x-2 md:space-x-4 lg:space-x-6">
                   <Input
                     type="number"
@@ -782,7 +782,7 @@ export function Dashboard() {
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     required
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-11 w-full md:w-48 lg:w-auto"
+                    className="border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 h-11 w-full md:w-48 lg:w-auto bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                   <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 h-11">
                     Add
@@ -796,11 +796,11 @@ export function Dashboard() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Monthly Trends */}
-          <Card className="bg-white shadow-lg border-gray-200">
+          <Card className="bg-white dark:bg-gray-800 shadow-lg border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <div className="p-2 bg-green-100 rounded-lg mr-3">
-                  <TrendingUp className="h-5 w-5 text-green-600" />
+              <CardTitle className="flex items-center text-gray-900 dark:text-white">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
+                  <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 Monthly Trends
               </CardTitle>
@@ -880,11 +880,11 @@ export function Dashboard() {
 
         {/* Additional Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-white shadow-lg border-gray-200">
+          <Card className="bg-white dark:bg-gray-800 shadow-lg border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <div className="p-2 bg-emerald-100 rounded-lg mr-3">
-                  <PiggyBank className="h-5 w-5 text-emerald-600" />
+              <CardTitle className="flex items-center text-gray-900 dark:text-white">
+                <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg mr-3">
+                  <PiggyBank className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 Savings Rate Trend
               </CardTitle>
@@ -894,11 +894,11 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white shadow-lg border-gray-200">
+          <Card className="bg-white dark:bg-gray-800 shadow-lg border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <div className="p-2 bg-orange-100 rounded-lg mr-3">
-                  <CreditCard className="h-5 w-5 text-orange-600" />
+              <CardTitle className="flex items-center text-gray-900 dark:text-white">
+                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg mr-3">
+                  <CreditCard className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                 </div>
                 Expense vs Income Ratio
               </CardTitle>
@@ -908,31 +908,31 @@ export function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white shadow-lg border-gray-200">
+          <Card className="bg-white dark:bg-gray-800 shadow-lg border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <div className="p-2 bg-indigo-100 rounded-lg mr-3">
-                  <Target className="h-5 w-5 text-indigo-600" />
+              <CardTitle className="flex items-center text-gray-900 dark:text-white">
+                <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg mr-3">
+                  <Target className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 Quick Stats
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
-                <div className="text-3xl font-bold text-blue-600">{entries.length}</div>
-                <div className="text-sm text-gray-600 mt-1">Total Entries</div>
+              <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg">
+                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{entries.length}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total Entries</div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg">
-                <div className="text-3xl font-bold text-green-600">
+              <div className="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg">
+                <div className="text-3xl font-bold text-green-600 dark:text-green-400">
                   {totals.income > 0 ? ((totals.balance / totals.income) * 100).toFixed(1) : '0'}%
                 </div>
-                <div className="text-sm text-gray-600 mt-1">Overall Savings Rate</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Overall Savings Rate</div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg">
-                <div className="text-3xl font-bold text-purple-600">
+              <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 rounded-lg">
+                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
                   {new Set(entries.map(e => e.category)).size}
                 </div>
-                <div className="text-sm text-gray-600 mt-1">Categories Used</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Categories Used</div>
               </div>
             </CardContent>
           </Card>
@@ -941,12 +941,12 @@ export function Dashboard() {
 
 
         {/* Entries Table */}
-        <Card className="bg-white shadow-lg border-gray-200" data-table-section>
+        <Card className="bg-white dark:bg-gray-800 shadow-lg border-gray-200 dark:border-gray-700" data-table-section>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between text-gray-900 dark:text-white">
               <div className="flex items-center">
-                <div className="p-2 bg-gray-100 rounded-lg mr-3">
-                  <BarChart3 className="h-5 w-5 text-gray-600" />
+                <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg mr-3">
+                  <BarChart3 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 </div>
                 Recent Entries
               </div>
@@ -955,7 +955,7 @@ export function Dashboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => setIsFilterDialogOpen(true)}
-                  className="flex items-center space-x-2 border-gray-300 hover:bg-gray-50"
+                  className="flex items-center space-x-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
                   <Filter className="h-4 w-4" />
                   <span>Filter</span>
@@ -964,7 +964,7 @@ export function Dashboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => handleExportPDF(activeFilters)}
-                  className="flex items-center space-x-2 text-green-600 hover:text-green-700 border-green-300 hover:bg-green-50"
+                  className="flex items-center space-x-2 text-green-600 hover:text-green-700 border-green-300 hover:bg-green-50 dark:text-green-400 dark:border-green-600 dark:hover:bg-green-900/20"
                 >
                   <Download className="h-4 w-4" />
                   <span>Export</span>
@@ -973,29 +973,29 @@ export function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Date</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Description</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Type</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Category</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Amount</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Created By</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm uppercase tracking-wider">Actions</th>
+                  <tr className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 border-b border-gray-200 dark:border-gray-600">
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider">Date</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider">Description</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider">Type</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider">Category</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider">Amount</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider">Created By</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                   {currentEntries.map((entry, index) => (
-                    <tr key={entry.id} className={`hover:bg-gray-50 transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                      <td className="py-4 px-6 text-gray-700 font-medium">
+                    <tr key={entry.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-900'}`}>
+                      <td className="py-4 px-6 text-gray-700 dark:text-gray-300 font-medium">
                         <div className="flex flex-col">
                           <span className="font-semibold">{new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</span>
-                          <span className="text-xs text-gray-500">{new Date(entry.date).getFullYear()}</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">{new Date(entry.date).getFullYear()}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-gray-900 font-medium max-w-xs">
+                      <td className="py-4 px-6 text-gray-900 dark:text-white font-medium max-w-xs">
                         <div className="truncate" title={entry.description}>
                           {entry.description}
                         </div>
@@ -1003,24 +1003,24 @@ export function Dashboard() {
                       <td className="py-4 px-6">
                         <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
                           entry.type === 'Income' 
-                            ? 'bg-green-100 text-green-800 border border-green-200' 
-                            : 'bg-red-100 text-red-800 border border-red-200'
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 border border-green-200 dark:border-green-700' 
+                            : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 border border-red-200 dark:border-red-700'
                         }`}>
                           {entry.type}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-gray-700 font-medium">
-                        <span className="px-2 py-1 bg-gray-100 rounded-md text-sm">
+                      <td className="py-4 px-6 text-gray-700 dark:text-gray-300 font-medium">
+                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-sm">
                           {entry.category}
                         </span>
                       </td>
                       <td className={`py-4 px-6 font-bold text-lg ${
-                        entry.type === 'Income' ? 'text-green-600' : 'text-red-600'
+                        entry.type === 'Income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}>
                         {formatCurrency(entry.amount)}
                       </td>
-                      <td className="py-4 px-6 text-gray-700 font-medium">
-                        <span className="px-2 py-1 bg-gray-100 rounded-md text-sm">
+                      <td className="py-4 px-6 text-gray-700 dark:text-gray-300 font-medium">
+                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-sm">
                           {entry.user_email || 'Unknown'}
                         </span>
                       </td>
