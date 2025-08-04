@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Figtree, Montserrat } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -41,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Browser Favicons */}
         <link rel="icon" type="image/png" sizes="16x16" href="https://i.ibb.co/R8QgThn/favicon-16-16.png" />
@@ -64,7 +65,9 @@ export default function RootLayout({
           letterSpacing: '0.025em'
         }}
       >
-        {children}
+        <ThemeProvider defaultTheme="system">
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

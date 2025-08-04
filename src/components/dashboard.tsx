@@ -16,6 +16,7 @@ import { getSupabaseClient } from '@/lib/supabase'
 import { getCurrentUser, signOut, isUserAuthorized, User } from '@/lib/auth'
 import { AccountingEntry, MonthlyData, CategoryData, SavingsRateData, ExpenseRatioData } from '@/types'
 import { CreditCard, PiggyBank, BarChart3, Plus, RefreshCw, Trash2, User as UserIcon, LogOut, TrendingUp, TrendingDown, Target, Filter, Download, AlertTriangle } from 'lucide-react'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { Pagination } from '@/components/ui/pagination'
 import { FilterDialog, FilterOptions } from '@/components/ui/filter-dialog'
 import { exportToPDF } from '@/lib/pdf-export'
@@ -620,6 +621,7 @@ export function Dashboard() {
                 <UserIcon className="h-4 w-4 text-gray-500" />
                 <span className="text-sm text-gray-700 font-medium truncate max-w-32">{user.email}</span>
               </div>
+              <ThemeToggle />
               <Button variant="outline" size="sm" onClick={loadEntries} className="hidden sm:flex">
                 <RefreshCw className="h-4 w-4 mr-2" />
                 <span className="hidden md:inline">Refresh</span>
