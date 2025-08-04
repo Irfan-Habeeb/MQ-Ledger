@@ -809,7 +809,7 @@ export function Dashboard() {
                   variant={visibleTrendDatasets.includes('income') ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleTrendDataset('income')}
-                  className={visibleTrendDatasets.includes('income') ? 'bg-green-600 hover:bg-green-700' : ''}
+                  className={visibleTrendDatasets.includes('income') ? 'bg-green-600 hover:bg-green-700' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'}
                 >
                   Income
                 </Button>
@@ -817,7 +817,7 @@ export function Dashboard() {
                   variant={visibleTrendDatasets.includes('expenses') ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleTrendDataset('expenses')}
-                  className={visibleTrendDatasets.includes('expenses') ? 'bg-red-600 hover:bg-red-700' : ''}
+                  className={visibleTrendDatasets.includes('expenses') ? 'bg-red-600 hover:bg-red-700' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'}
                 >
                   Expenses
                 </Button>
@@ -825,7 +825,7 @@ export function Dashboard() {
                   variant={visibleTrendDatasets.includes('balance') ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleTrendDataset('balance')}
-                  className={visibleTrendDatasets.includes('balance') ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                  className={visibleTrendDatasets.includes('balance') ? 'bg-blue-600 hover:bg-blue-700' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'}
                 >
                   Balance
                 </Button>
@@ -837,11 +837,11 @@ export function Dashboard() {
           </Card>
 
           {/* Category Breakdown */}
-          <Card className="bg-white shadow-lg border-gray-200">
+          <Card className="bg-white dark:bg-gray-800 shadow-lg border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <div className="p-2 bg-purple-100 rounded-lg mr-3">
-                  <BarChart3 className="h-5 w-5 text-purple-600" />
+              <CardTitle className="flex items-center text-gray-900 dark:text-white">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg mr-3">
+                  <BarChart3 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 </div>
                 Category Breakdown
               </CardTitle>
@@ -850,7 +850,7 @@ export function Dashboard() {
                   variant={categoryView === 'Expense' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setCategoryView('Expense')}
-                  className={categoryView === 'Expense' ? 'bg-red-600 hover:bg-red-700' : ''}
+                  className={categoryView === 'Expense' ? 'bg-red-600 hover:bg-red-700' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'}
                 >
                   Expenses
                 </Button>
@@ -858,7 +858,7 @@ export function Dashboard() {
                   variant={categoryView === 'Income' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setCategoryView('Income')}
-                  className={categoryView === 'Income' ? 'bg-green-600 hover:bg-green-700' : ''}
+                  className={categoryView === 'Income' ? 'bg-green-600 hover:bg-green-700' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'}
                 >
                   Income
                 </Button>
@@ -866,7 +866,7 @@ export function Dashboard() {
                   variant={categoryView === 'All' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setCategoryView('All')}
-                  className={categoryView === 'All' ? 'bg-purple-600 hover:bg-purple-700' : ''}
+                  className={categoryView === 'All' ? 'bg-purple-600 hover:bg-purple-700' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'}
                 >
                   All
                 </Button>
