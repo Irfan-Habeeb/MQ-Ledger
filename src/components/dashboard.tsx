@@ -1075,12 +1075,12 @@ export function Dashboard() {
       {/* Danger Zone - Data Flush (Only for mentorscue@gmail.com) */}
       {user?.email === 'mentorscue@gmail.com' && (
         <div className="mt-8">
-          <Card className="bg-white shadow-lg border-red-200">
+          <Card className="bg-white dark:bg-gray-800 shadow-lg border-red-200 dark:border-red-800">
             <CardHeader>
-              <CardTitle className="flex items-center justify-between text-red-700">
+              <CardTitle className="flex items-center justify-between text-red-700 dark:text-red-400">
                 <div className="flex items-center">
-                  <div className="p-2 bg-red-100 rounded-lg mr-3">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                  <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg mr-3">
+                    <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
                   </div>
                   Danger Zone - Data Management
                 </div>
@@ -1088,7 +1088,7 @@ export function Dashboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowDangerZone(!showDangerZone)}
-                  className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                  className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 dark:text-red-400 dark:border-red-700 dark:hover:bg-red-900/20"
                 >
                   {showDangerZone ? 'Hide' : 'Show'} Danger Zone
                 </Button>
@@ -1096,16 +1096,16 @@ export function Dashboard() {
             </CardHeader>
             
             {showDangerZone && (
-              <CardContent className="p-6 border-t border-red-200">
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <CardContent className="p-6 border-t border-red-200 dark:border-red-800">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
                   <div className="flex items-start space-x-3">
-                    <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                    <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h3 className="text-sm font-semibold text-red-800 mb-2">⚠️ Data Flush Warning</h3>
-                      <p className="text-sm text-red-700 mb-3">
+                      <h3 className="text-sm font-semibold text-red-800 dark:text-red-300 mb-2">⚠️ Data Flush Warning</h3>
+                      <p className="text-sm text-red-700 dark:text-red-300 mb-3">
                         This feature allows you to permanently delete old accounting entries. This action cannot be undone and will remove data from the database.
                       </p>
-                      <div className="text-xs text-red-600 bg-red-100 p-2 rounded">
+                      <div className="text-xs text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 p-2 rounded">
                         <strong>Safety Note:</strong> Consider exporting your data before using this feature.
                       </div>
                     </div>
@@ -1113,41 +1113,41 @@ export function Dashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Delete 6+ Months Old</h4>
-                    <p className="text-sm text-gray-600 mb-3">Remove entries older than 6 months</p>
+                  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Delete 6+ Months Old</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Remove entries older than 6 months</p>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => previewFlush('6months')}
-                      className="w-full text-orange-600 hover:text-orange-700 border-orange-300 hover:bg-orange-50"
+                      className="w-full text-orange-600 hover:text-orange-700 border-orange-300 hover:bg-orange-50 dark:text-orange-400 dark:border-orange-700 dark:hover:bg-orange-900/20"
                     >
                       Preview & Delete
                     </Button>
                   </div>
 
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Delete 1+ Year Old</h4>
-                    <p className="text-sm text-gray-600 mb-3">Remove entries older than 1 year</p>
+                  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Delete 1+ Year Old</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Remove entries older than 1 year</p>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => previewFlush('1year')}
-                      className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                      className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 dark:text-red-400 dark:border-red-700 dark:hover:bg-red-900/20"
                     >
                       Preview & Delete
                     </Button>
                   </div>
 
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Custom Date Range</h4>
-                    <p className="text-sm text-gray-600 mb-3">Delete entries before a specific date</p>
+                  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Custom Date Range</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Delete entries before a specific date</p>
                     <div className="space-y-2">
                       <input
                         type="date"
                         value={customDate}
                         onChange={(e) => setCustomDate(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         placeholder="Select date"
                       />
                       <Button
@@ -1155,7 +1155,7 @@ export function Dashboard() {
                         size="sm"
                         onClick={() => previewFlush('custom')}
                         disabled={!customDate}
-                        className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed dark:text-red-400 dark:border-red-700 dark:hover:bg-red-900/20"
                       >
                         Preview & Delete
                       </Button>
@@ -1183,55 +1183,55 @@ export function Dashboard() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <span className="text-lg font-semibold text-gray-900">Entry Added Successfully!</span>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">Entry Added Successfully!</span>
             </DialogTitle>
           </DialogHeader>
           
           {successEntry && (
             <div className="space-y-4">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Entry Details</h3>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Entry Details</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Description:</span>
-                    <span className="text-sm font-medium text-gray-900">{successEntry.description}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Description:</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">{successEntry.description}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Type:</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Type:</span>
                     <span className={`text-sm font-medium px-2 py-1 rounded-full ${
                       successEntry.type === 'Income' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' 
+                        : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'
                     }`}>
                       {successEntry.type}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Category:</span>
-                    <span className="text-sm font-medium text-gray-900">{successEntry.category}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Category:</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">{successEntry.category}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Amount:</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Amount:</span>
                     <span className={`text-sm font-bold ${
-                      successEntry.type === 'Income' ? 'text-green-600' : 'text-red-600'
+                      successEntry.type === 'Income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                     }`}>
                       {successEntry.amount}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Date:</span>
-                    <span className="text-sm font-medium text-gray-900">{successEntry.date}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Date:</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">{successEntry.date}</span>
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                <svg className="w-4 h-4 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>Your entry has been saved and is now visible in the table below.</span>
@@ -1243,7 +1243,7 @@ export function Dashboard() {
             <Button 
               variant="outline" 
               onClick={() => setShowSuccessModal(false)}
-              className="text-gray-700 hover:bg-gray-50"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
             >
               Close
             </Button>
@@ -1274,55 +1274,55 @@ export function Dashboard() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
-              <span className="text-lg font-semibold text-gray-900">Confirm Deletion</span>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">Confirm Deletion</span>
             </DialogTitle>
           </DialogHeader>
           
           {entryToDelete && (
             <div className="space-y-4">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-red-800 mb-3">⚠️ Warning: This action cannot be undone</h3>
-                <p className="text-sm text-red-700 mb-4">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-red-800 dark:text-red-300 mb-3">⚠️ Warning: This action cannot be undone</h3>
+                <p className="text-sm text-red-700 dark:text-red-300 mb-4">
                   You are about to permanently delete this entry. This action cannot be reversed.
                 </p>
                 
-                <div className="bg-white rounded-lg p-3 border border-red-100">
-                  <h4 className="text-sm font-medium text-gray-900 mb-2">Entry to be deleted:</h4>
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-red-100 dark:border-red-800">
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Entry to be deleted:</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Description:</span>
-                      <span className="font-medium text-gray-900">{entryToDelete.description}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Description:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{entryToDelete.description}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Type:</span>
+                      <span className="text-gray-600 dark:text-gray-400">Type:</span>
                       <span className={`font-medium px-2 py-1 rounded-full text-xs ${
                         entryToDelete.type === 'Income' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
+                          ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' 
+                          : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'
                       }`}>
                         {entryToDelete.type}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Category:</span>
-                      <span className="font-medium text-gray-900">{entryToDelete.category}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Category:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{entryToDelete.category}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Amount:</span>
+                      <span className="text-gray-600 dark:text-gray-400">Amount:</span>
                       <span className={`font-bold ${
-                        entryToDelete.type === 'Income' ? 'text-green-600' : 'text-red-600'
+                        entryToDelete.type === 'Income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       }`}>
                         {formatCurrency(entryToDelete.amount)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Date:</span>
-                      <span className="font-medium text-gray-900">
+                      <span className="text-gray-600 dark:text-gray-400">Date:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
                         {new Date(entryToDelete.date).toLocaleDateString('en-IN', {
                           day: '2-digit',
                           month: 'long',
@@ -1343,7 +1343,7 @@ export function Dashboard() {
                 setShowDeleteModal(false)
                 setEntryToDelete(null)
               }}
-              className="text-gray-700 hover:bg-gray-50"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
             >
               Cancel
             </Button>
